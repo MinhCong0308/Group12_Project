@@ -1,0 +1,6 @@
+package screen.menu;
+import javax.swing.*;
+
+public class MainMenu {
+	
+}
