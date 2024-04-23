@@ -22,23 +22,21 @@ import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeEvent;
 
 import java.text.NumberFormat;
-import java.util.Arrays;
-import java.util.Random;
-import java.util.concurrent.TimeUnit;
+
 
 public class MainFrame extends JFrame implements PropertyChangeListener,
 	   ChangeListener, Visualizer.SortedListener,
 	   ButtonPanel.SortButtonListener, MyCanvas.VisualizerProvider {
 	public static final long serialVersionUID = 10L;
 	private static final int WIDTH = 1280, HEIGHT = 800;
-	private static final int CAPACITY = 50, FPS = 100;
+	private static final int CAPACITY = 50;
 	private JPanel mainPanel, inputPanel, sliderPanel, inforPanel;
 	private ButtonPanel buttonPanel;
-	private JLabel capacityLabel, fpsLabel, timeLabel, compLabel, swapLabel;
+	private JLabel capacityLabel, /*fpsLabel */ timeLabel, compLabel, swapLabel;
 
 	private JButton backButton;
 	private JFormattedTextField capacityField;
-	private JSlider fpsSlider;
+	//private JSlider fpsSlider;
 	private MyCanvas canvas;
 	private Visualizer visualizer;
 
@@ -75,7 +73,7 @@ public class MainFrame extends JFrame implements PropertyChangeListener,
 
 		// add buttons panel
 		buttonPanel = new ButtonPanel(this);
-		buttonPanel.setBounds(0, 150, 250, HEIGHT);
+		buttonPanel.setBounds(0, 150, 250, 600);
 		buttonPanel.setBackground(ColorManager.SORTAPP_BACKGROUND);
 		mainPanel.add(buttonPanel);
 
@@ -93,7 +91,7 @@ public class MainFrame extends JFrame implements PropertyChangeListener,
 
 
 		// sorting visualizer
-		visualizer = new Visualizer(CAPACITY, FPS, this);
+		visualizer = new Visualizer(CAPACITY, this);
 		visualizer.createRandomArray(canvas.getWidth(), canvas.getHeight());
 
 
@@ -110,7 +108,6 @@ public class MainFrame extends JFrame implements PropertyChangeListener,
 		formatter.setMinimum(0);
 		formatter.setMaximum(200);
 		formatter.setAllowsInvalid(false);
-		/* importan -> onChange */
 		formatter.setCommitsOnValidEdit(true);
 
 		capacityField = new JFormattedTextField(formatter);
@@ -130,36 +127,13 @@ public class MainFrame extends JFrame implements PropertyChangeListener,
 		inputPanel.add(capacityLabel);
 		inputPanel.add(capacityField);
 		inputPanel.setBackground(ColorManager.MENU_BACKGROUND);
-		inputPanel.setBounds(25, 20, 170, 30);
+		inputPanel.setBounds(100, 50, 170, 30);
 		mainPanel.add(inputPanel);
 
 
 		// create slider for fps
 		// label
-		fpsLabel = new JLabel("Frames Per Second");
-		fpsLabel.setAlignmentX(JLabel.CENTER_ALIGNMENT);
-		fpsLabel.setFont(new Font(null, Font.BOLD, 15));
-		fpsLabel.setForeground(ColorManager.TEXT);
 
-		// slider
-		fpsSlider = new JSlider(JSlider.HORIZONTAL, 50, 350, FPS);
-		fpsSlider.setMajorTickSpacing(100);
-		fpsSlider.setMinorTickSpacing(20);
-		fpsSlider.setPaintTicks(true);
-		fpsSlider.setPaintLabels(true);
-		fpsSlider.setPaintTrack(true);
-		fpsSlider.setForeground(ColorManager.TEXT);
-		fpsSlider.addChangeListener(this);
-
-		// slider panel
-		sliderPanel = new JPanel();
-		sliderPanel.setLayout(new BoxLayout(sliderPanel, BoxLayout.Y_AXIS));
-		sliderPanel.setBackground(ColorManager.MENU_BACKGROUND);
-		sliderPanel.add(fpsLabel);
-		sliderPanel.add(fpsSlider);
-
-		sliderPanel.setBounds(10, 80, 220, 100);
-		mainPanel.add(sliderPanel);
 
 
 		// statistics
@@ -200,31 +174,25 @@ public class MainFrame extends JFrame implements PropertyChangeListener,
 	}
 
 
-	// the speed (fps) is changed
-	public void stateChanged(ChangeEvent e) {
-		if (!fpsSlider.getValueIsAdjusting()) {
-			int value = (int) fpsSlider.getValue();
-			visualizer.setFPS(value);
-		}
-	}
-
-
 	// button clicked
 	public void sortButtonClicked(int id) {
 		switch (id) {
-			case 0:  // create button
+			case 0:
+				visualizer.createManualArray(canvas.getWidth(), canvas.getHeight());
+				break;
+			case 1:  // create button
 				visualizer.createRandomArray(canvas.getWidth(), canvas.getHeight());
 				break;
-			case 1:  // radix button
-				//visualizer.radixSort();
+			case 2:  // 1 sorting algorithm
 				break;
-			case 2:  // counting button
-				visualizer.countingSort();
+			case 3:  // 1 sorting algorithm
 				break;
-			case 3:  // merge button
-				//visualizer.mergeSort();
+			case 4:  // 1 sorting algorithm
+				
 				break;
-			case 4:  //back button
+			case 5: //1 sorting algorithm
+				break;
+			case 6:  //
 				new MainMenu();
 				dispose();
 		}
@@ -255,6 +223,13 @@ public class MainFrame extends JFrame implements PropertyChangeListener,
 		}
 
 		return bs;
+	}
+
+
+	@Override
+	public void stateChanged(ChangeEvent e) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

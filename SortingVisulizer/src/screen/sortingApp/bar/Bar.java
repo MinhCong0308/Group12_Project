@@ -38,11 +38,19 @@ public class Bar
 	}
 
 
-	public void setValue(int value) { this.value = value; }
+	public void setValue(int value) { 
+		this.value = value; 
+	}
 
-	public int getValue() { return value; }
+	public int getValue() { 
+		return value; 
+	}
 
-	public void setColor(Color color) { this.color = color; }
+	public void setColor(Color color) { 
+		this.color = color; 
+	}
 
-	public Color getColor() { return color; }
+	public Color getColor() { 
+		return color; 
+	}
 }
