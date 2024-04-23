@@ -1,0 +1,5 @@
+package screen.sortingApp.formatter;
+
+public class Formatter {
+
+}
