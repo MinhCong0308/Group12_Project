@@ -5,8 +5,8 @@ public class ColorManager {
 	
 	
 	//Color for background in menu and sorting GUI
-	public static Color MENU_BACKGROUND = new Color(0,255,255);
-	public static Color SORTAPP_BACKGROUND = new Color(127,127,127);
+	public static Color MENU_BACKGROUND = new Color(62,62,62);
+	public static Color SORTAPP_BACKGROUND = new Color(48,48,48);
 	
 	//Color for bar represent value in array.
 	public static Color BAR_WHITE = new Color(211,222,228);
@@ -22,7 +22,8 @@ public class ColorManager {
 	public static Color RED_TEXT = new Color(221,77,81);
 	public static Color TEXT_YELLOW = new Color(244, 183, 7);
 	public static Color TEXT_GREEN = new Color(68, 212, 163);
-
+	
+	//Color for border.
 	public static Color FIELD_BORDER = new Color(38, 38, 38);
 
 }

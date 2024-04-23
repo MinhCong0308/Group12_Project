@@ -5,6 +5,8 @@ import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import screen.sortingApp.color.ColorManager;
+import screen.sortingApp.*;
 
 public class MainMenu extends JFrame {
     private JPanel mainPanel, container;
@@ -17,7 +19,7 @@ public class MainMenu extends JFrame {
         setSize(new Dimension(WIDTH, HEIGHT));
         setLocationRelativeTo(null);
         setTitle("Group 12's sorting visualizer");
-        setBackground(new Color(0,255,255));
+        setBackground(ColorManager.MENU_BACKGROUND);
         initialize();
         setVisible(true);
     }
@@ -30,24 +32,25 @@ public class MainMenu extends JFrame {
 
         Container container = getContentPane();
         container.setLayout(new BorderLayout());
-        container.setBackground(new Color(0,255,255));
+        container.setBackground(ColorManager.MENU_BACKGROUND);
 
         titleLabel = new JLabel("Sorting Visualizer Application");
         titleLabel.setHorizontalAlignment(SwingConstants.CENTER);
         titleLabel.setFont(titleLabel.getFont().deriveFont(Font.BOLD, 50f));
-        titleLabel.setForeground(Color.RED);
+        titleLabel.setForeground(ColorManager.RED_TEXT);
         titleLabel.setBorder(new EmptyBorder(topPadding, leftPadding, bottomPadding, rightPadding));
 
         // Adding groupLabel
         groupLabel = new JLabel("<html>Made by Group 12<br/>Members:<br/>Bui Nguyen Minh<br/>Nguyen Cong Minh<br/>Pham Duy Hoang<br/>Le Van Hau</html>");
         groupLabel.setHorizontalAlignment(SwingConstants.CENTER);
         groupLabel.setFont(new Font("Arial", Font.BOLD, 20));
-        groupLabel.setForeground(Color.RED);
-        groupLabel.setBackground(new Color(0, 255, 255));
+        groupLabel.setForeground(ColorManager.RED_TEXT);
+        groupLabel.setBackground(ColorManager.MENU_BACKGROUND);
 
         sortButton = new JButton("Sorting");
         sortButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
+            	new MainFrame().setVisible(true);
                 dispose();
             }
         });
@@ -79,12 +82,18 @@ public class MainMenu extends JFrame {
         gbc.gridy = 0;
         gbc.insets = new Insets(10, 0, 10, 0);
 
+        // Add sortButton to the left bottom
+        gbc.anchor = GridBagConstraints.WEST; // Align to the left
         buttonPanel.add(sortButton, gbc);
 
-        gbc.gridy++;
+        // Add quitButton to the right bottom
+        gbc.anchor = GridBagConstraints.EAST; // Align to the right
+        gbc.gridx = 1; // Change the column to place the quitButton
         buttonPanel.add(quitButton, gbc);
-        buttonPanel.setBackground(new Color(0, 255, 255));
+
+        buttonPanel.setBackground(ColorManager.MENU_BACKGROUND);
 
         container.add(buttonPanel, BorderLayout.SOUTH);
+
     }
 }

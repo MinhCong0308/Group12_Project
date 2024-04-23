@@ -1,0 +1,61 @@
+package screen.sortingApp.button;
+import screen.sortingApp.color.ColorManager;
+import javax.swing.JButton;
+import javax.swing.JPanel;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+public class ButtonPanel extends JPanel {
+    public static final long serialVersionUID = 1L;
+    private static final int BUTTON_WIDTH = 200, BUTTON_HEIGHT = 80;
+    private JButton[] buttons;
+    private SortButtonListener listener;
+    private int number = 5;
+
+    public ButtonPanel(SortButtonListener listener) {
+        super();
+        this.listener = listener;
+        buttons = new JButton[number];
+
+        // Initialize buttons
+        initButtons(buttons[0], "Create Array", 0);
+        initButtons(buttons[1], "Radix Sort", 1);
+        initButtons(buttons[2], "Counting Sort", 2);
+        initButtons(buttons[3], "Merge Sort", 3);
+        initBackButton(buttons[4], 4);
+
+        // Add buttons to the panel
+        setLayout(new GridLayout(number, 1, 0, 10));
+        for (int i = 0; i < buttons.length; i++) {
+            add(buttons[i]);
+        }
+    }
+
+    private void initButtons(JButton button, String name, int id) {
+        button = new JButton(name);
+        button.setPreferredSize(new Dimension(BUTTON_WIDTH, BUTTON_HEIGHT));
+        button.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                listener.sortButtonClicked(id);
+            }
+        });
+    }
+
+    private void initBackButton(JButton button, int id) {
+        button = new JButton("< Back to menu");
+        button.setPreferredSize(new Dimension(BUTTON_WIDTH, BUTTON_HEIGHT));
+        button.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                listener.sortButtonClicked(id);
+            }
+        });
+    }
+
+    public interface SortButtonListener {
+        void sortButtonClicked(int id);
+    }
+}
+
