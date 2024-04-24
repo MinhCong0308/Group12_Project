@@ -18,7 +18,7 @@ public class ButtonPanel extends JPanel {
         buttons = new JButton[number];
 
         // Initialize buttons
-        String[] buttonLabels = {"Manually Create","Random Create", "Sorting Algo 1", "Sorting Algo 2", "Sorting Algo 3", "Sorting Algo 4", "Back to Menu"};
+        String[] buttonLabels = {"Manually Create","Random Create", "Bubble Sort", "Sorting Algo 2", "Sorting Algo 3", "Sorting Algo 4", "Back to Menu"};
         for (int i = 0; i < buttons.length; i++) {
             buttons[i] = new JButton(buttonLabels[i]);
             buttons[i].setPreferredSize(new Dimension(BUTTON_WIDTH, BUTTON_HEIGHT));

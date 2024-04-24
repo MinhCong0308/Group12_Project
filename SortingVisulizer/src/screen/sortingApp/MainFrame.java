@@ -127,7 +127,7 @@ public class MainFrame extends JFrame implements PropertyChangeListener,
 		inputPanel.add(capacityLabel);
 		inputPanel.add(capacityField);
 		inputPanel.setBackground(ColorManager.MENU_BACKGROUND);
-		inputPanel.setBounds(100, 50, 170, 30);
+		inputPanel.setBounds(40, 90, 170, 30);
 		mainPanel.add(inputPanel);
 
 

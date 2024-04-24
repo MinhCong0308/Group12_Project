@@ -9,18 +9,26 @@ import sorting.*;
 import java.util.Arrays;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
+
 public class Visualizer {
-	private static final int PADDING = 20;
-	private static final int MAX_BAR_HEIGHT = 350, MIN_BAR_HEIGHT = 30;
-	private Integer [] array;
-	private int capacity;
-	private Bar[] bars;
-	private boolean existedArray;
-    private int speed = 20;
+    // Padding at the 2 ends
+    private static final int PADDING = 20;
+    // Max and Min height of bars
+    private static final int MAX_BAR_HEIGHT = 350, MIN_BAR_HEIGHT = 30;
+    // Array of integers store the values
+    private Integer[] array;
+    // The number of elements that user want to sort
+    private int capacity;
+    // Array of bars that will display on canvas
+    private Bar[] bars;
+    // Check if exist array, draw the bars again if canvas reset
+    private boolean existedArray;
+    //The speed of sorting
+    private int speed = 5;
 	
 	//Value for statistic
-	//private long startTime, time;
-	//private int comp, swapping;
+	private long startTime, time;
+	private int comp, swapping;
 	
 	private Color originalColor; /*swappingColor, comparingColor;*/
 	private BufferStrategy bs;
@@ -136,37 +144,44 @@ public class Visualizer {
     }
 
     public void visualizeBubbleSort() {
+        // Get graphics from buffer
         g = bs.getDrawGraphics();
+        //set up variables for statistics
+        comp = 0;
+        swapping = 0;
+        startTime = System.nanoTime();
         for (int i = 0; i < array.length - 1; i++) {
             for (int j = 0; j < array.length - i - 1; j++) {
+                // Set color for 2 bars that are being compared
+                comp++;
                 setColorComparing(j, j + 1);
-                try {
-                TimeUnit.MILLISECONDS.sleep(speed); // Sleep after each pass
-                } catch (Exception ex) {
-                // Handle exception
-                }
+                sleep();
                 if (array[j] > array[j + 1]) {
                     // swap arr[j+1] and arr[j]
+                    swapping++;
                     swap(j, j + 1);
                     swapBarBubbleSort(j, j + 1, i);
-                }
-                else {
+                } else {
+                    // Set the bar back to normal color if not swapping
                     setColorNormal(j, j + 1);
                 }
             }
-            bs.show(); // Move this line here to update the visualization after each pass
-            try {
-                TimeUnit.MILLISECONDS.sleep(speed); // Sleep after each pass
-            } catch (Exception ex) {
-                // Handle exception
-            }
-        }
-        for (int i = 0; i < array.length; i++) {
-            bars[i].clear(g);
-            bars[i].setColor(ColorManager.BAR_GREEN);
-            bars[i].draw(g);
+            // Set the bar with the correct position green
+            bars[bars.length - i - 1].clear(g);
+            bars[bars.length - i - 1].setColor(ColorManager.BAR_GREEN);
+            bars[bars.length - i - 1].draw(g);
             bs.show();
+            sleep();
         }
+        // Set the first bar to green
+        bars[0].clear(g);
+        bars[0].setColor(ColorManager.BAR_GREEN);
+        bars[0].draw(g);
+        bs.show();
+        // Compute time taken
+        time = System.nanoTime() - startTime;
+        // Call fuction to display statistics
+        listener.onArraySorted(time, comp, swapping);
         g.dispose();
     }
 
@@ -184,6 +199,7 @@ public class Visualizer {
     }
     
     public void swapBarBubbleSort(int i, int j, int pivot) {
+        // Change color of 2 swapping bar to red
         bars[i].clear(g);
         bars[j].clear(g);
         bars[i].setColor(ColorManager.BAR_RED);
@@ -191,12 +207,8 @@ public class Visualizer {
         bars[i].draw(g);
         bars[j].draw(g);
         bs.show();
-        try {
-                TimeUnit.MILLISECONDS.sleep(speed); // Sleep after each pass
-            } catch (Exception ex) {
-                // Handle exception
-            }
-        // Restore original values and colors
+        sleep();
+        // Change color of the corrected bar to green, others to normal
         bars[i].clear(g);
         bars[j].clear(g);
         bars[i].setValue(array[i]);
@@ -219,6 +231,7 @@ public class Visualizer {
         bars[j].setColor(ColorManager.BAR_YELLOW);
         bars[i].draw(g);
         bars[j].draw(g);
+        sleep();
         bs.show();
     }
 
@@ -230,5 +243,13 @@ public class Visualizer {
         bars[i].draw(g);
         bars[j].draw(g);
         bs.show();
+    }
+
+    public void sleep() {
+        try {
+                TimeUnit.MILLISECONDS.sleep(speed); // Sleep after each pass
+        } catch (Exception ex) {
+                // Handle exception
+        }
     }
 }
