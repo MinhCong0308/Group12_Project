@@ -183,7 +183,8 @@ public class MainFrame extends JFrame implements PropertyChangeListener,
 			case 1:  // create button
 				visualizer.createRandomArray(canvas.getWidth(), canvas.getHeight());
 				break;
-			case 2:  // 1 sorting algorithm
+			case 2: // 1 sorting algorithm
+				visualizer.visualizeBubbleSort();
 				break;
 			case 3:  // 1 sorting algorithm
 				break;

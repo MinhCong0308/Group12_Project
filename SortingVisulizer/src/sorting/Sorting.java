@@ -1,5 +1,6 @@
 package sorting;
 
-public abstract class Sorting {
-
-}
+public interface Sorting {
+    public void bubbleSort();
+    
+} 

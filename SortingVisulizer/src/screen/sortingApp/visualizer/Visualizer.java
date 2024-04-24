@@ -16,7 +16,7 @@ public class Visualizer {
 	private int capacity;
 	private Bar[] bars;
 	private boolean existedArray;
-	
+    private int speed = 20;
 	
 	//Value for statistic
 	//private long startTime, time;
@@ -135,7 +135,27 @@ public class Visualizer {
         this.capacity = capacity;
     }
 
+    public void visualizeBubbleSort() {
+        g = bs.getDrawGraphics();
 
+    for (int i = 0; i < array.length - 1; i++) {
+        for (int j = 0; j < array.length - i - 1; j++) {
+            if (array[j] > array[j + 1]) {
+                // swap arr[j+1] and arr[j]
+                swap(j, j + 1);
+                swapBar(j, j + 1);
+            }
+        }
+            
+            bs.show(); // Move this line here to update the visualization after each pass
+        try {
+            TimeUnit.MILLISECONDS.sleep(speed); // Sleep after each pass
+        } catch (Exception ex) {
+            // Handle exception
+        }
+    }
+        g.dispose();
+    }
 
 
 	public interface SortedListener
@@ -143,5 +163,35 @@ public class Visualizer {
         void onArraySorted(long elapsedTime, int comparison, int swapping);
         BufferStrategy getBufferStrategy();
     }
-	
+
+    public void swap(int i, int j) {
+        int temp = array[i];
+        array[i] = array[j];
+        array[j] = temp;
+    }
+    
+    public void swapBar(int i, int j) {
+        bars[i].setColor(ColorManager.BAR_GREEN);
+        bars[j].setColor(ColorManager.BAR_GREEN);
+        bars[i].draw(g);
+        bars[j].draw(g);
+        bs.show();
+    // Delay to see the swapped bars
+        try {
+            TimeUnit.MILLISECONDS.sleep(speed);
+        } catch (Exception ex) {
+            // Handle exception
+        }
+        bars[i].clear(g);
+        bars[i].clear(g);
+        bs.show();
+    // Restore original values and colors
+        bars[i].setValue(array[i]);
+        bars[j].setValue(array[j]);
+        bars[i].setColor(ColorManager.BAR_WHITE);
+        bars[j].setColor(ColorManager.BAR_WHITE);
+        bars[i].draw(g);
+        bars[j].draw(g);
+        bs.show();
+    }
 }
