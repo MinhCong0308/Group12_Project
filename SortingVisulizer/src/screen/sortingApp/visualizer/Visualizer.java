@@ -137,23 +137,31 @@ public class Visualizer {
 
     public void visualizeBubbleSort() {
         g = bs.getDrawGraphics();
-
-    for (int i = 0; i < array.length - 1; i++) {
-        for (int j = 0; j < array.length - i - 1; j++) {
-            if (array[j] > array[j + 1]) {
-                // swap arr[j+1] and arr[j]
-                swap(j, j + 1);
-                swapBar(j, j + 1);
+        for (int i = 0; i < array.length - 1; i++) {
+            for (int j = 0; j < array.length - i - 1; j++) {
+                setColorComparing(j, j + 1);
+                if (array[j] > array[j + 1]) {
+                    // swap arr[j+1] and arr[j]
+                    swap(j, j + 1);
+                    swapBarBubbleSort(j, j + 1, i);
+                }
+                else {
+                    setColorNormal(j, j + 1);
+                }
+            }
+            bs.show(); // Move this line here to update the visualization after each pass
+            try {
+                TimeUnit.MILLISECONDS.sleep(speed); // Sleep after each pass
+            } catch (Exception ex) {
+                // Handle exception
             }
         }
-            
-            bs.show(); // Move this line here to update the visualization after each pass
-        try {
-            TimeUnit.MILLISECONDS.sleep(speed); // Sleep after each pass
-        } catch (Exception ex) {
-            // Handle exception
+        for (int i = 0; i < array.length; i++) {
+            bars[i].clear(g);
+            bars[i].setColor(ColorManager.BAR_GREEN);
+            bars[i].draw(g);
+            bs.show();
         }
-    }
         g.dispose();
     }
 
@@ -170,24 +178,43 @@ public class Visualizer {
         array[j] = temp;
     }
     
-    public void swapBar(int i, int j) {
-        bars[i].setColor(ColorManager.BAR_GREEN);
-        bars[j].setColor(ColorManager.BAR_GREEN);
+    public void swapBarBubbleSort(int i, int j, int pivot) {
+        bars[i].clear(g);
+        bars[j].clear(g);
+        bars[i].setColor(ColorManager.BAR_RED);
+        bars[j].setColor(ColorManager.BAR_RED);
         bars[i].draw(g);
         bars[j].draw(g);
         bs.show();
-    // Delay to see the swapped bars
-        try {
-            TimeUnit.MILLISECONDS.sleep(speed);
-        } catch (Exception ex) {
-            // Handle exception
-        }
+        // Restore original values and colors
         bars[i].clear(g);
-        bars[i].clear(g);
-        bs.show();
-    // Restore original values and colors
+        bars[j].clear(g);
         bars[i].setValue(array[i]);
         bars[j].setValue(array[j]);
+        bars[i].setColor(ColorManager.BAR_WHITE);
+        if (j == bars.length - pivot - 1) {
+            bars[j].setColor(ColorManager.BAR_GREEN);
+        } else {
+            bars[j].setColor(ColorManager.BAR_WHITE);
+        }
+        bars[i].draw(g);
+        bars[j].draw(g);
+        bs.show();
+    }
+    
+    public void setColorComparing(int i, int j) {
+        bars[i].clear(g);
+        bars[j].clear(g);
+        bars[i].setColor(ColorManager.BAR_YELLOW);
+        bars[j].setColor(ColorManager.BAR_YELLOW);
+        bars[i].draw(g);
+        bars[j].draw(g);
+        bs.show();
+    }
+
+    public void setColorNormal(int i, int j) {
+        bars[i].clear(g);
+        bars[j].clear(g);
         bars[i].setColor(ColorManager.BAR_WHITE);
         bars[j].setColor(ColorManager.BAR_WHITE);
         bars[i].draw(g);
