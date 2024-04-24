@@ -140,6 +140,11 @@ public class Visualizer {
         for (int i = 0; i < array.length - 1; i++) {
             for (int j = 0; j < array.length - i - 1; j++) {
                 setColorComparing(j, j + 1);
+                try {
+                TimeUnit.MILLISECONDS.sleep(speed); // Sleep after each pass
+                } catch (Exception ex) {
+                // Handle exception
+                }
                 if (array[j] > array[j + 1]) {
                     // swap arr[j+1] and arr[j]
                     swap(j, j + 1);
@@ -186,6 +191,11 @@ public class Visualizer {
         bars[i].draw(g);
         bars[j].draw(g);
         bs.show();
+        try {
+                TimeUnit.MILLISECONDS.sleep(speed); // Sleep after each pass
+            } catch (Exception ex) {
+                // Handle exception
+            }
         // Restore original values and colors
         bars[i].clear(g);
         bars[j].clear(g);
