@@ -187,6 +187,7 @@ public class MainFrame extends JFrame implements PropertyChangeListener,
 				visualizer.visualizeBubbleSort();
 				break;
 			case 3:  // 1 sorting algorithm
+				visualizer.visualizeSelectionSort();
 				break;
 			case 4:  // 1 sorting algorithm
 				

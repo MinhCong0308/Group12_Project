@@ -24,7 +24,7 @@ public class Visualizer {
     // Check if exist array, draw the bars again if canvas reset
     private boolean existedArray;
     //The speed of sorting
-    private int speed = 5;
+    private int speed = 40;
 	
 	//Value for statistic
 	private long startTime, time;
@@ -155,7 +155,7 @@ public class Visualizer {
                 // Set color for 2 bars that are being compared
                 comp++;
                 setColorComparing(j, j + 1);
-                sleep();
+                sleep(speed);
                 if (array[j] > array[j + 1]) {
                     // swap arr[j+1] and arr[j]
                     swapping++;
@@ -171,20 +171,83 @@ public class Visualizer {
             bars[bars.length - i - 1].setColor(ColorManager.BAR_GREEN);
             bars[bars.length - i - 1].draw(g);
             bs.show();
-            sleep();
+            sleep(speed);
         }
         // Set the first bar to green
         bars[0].clear(g);
         bars[0].setColor(ColorManager.BAR_GREEN);
         bars[0].draw(g);
         bs.show();
-        // Compute time taken
+        // Compute time takeng 
         time = System.nanoTime() - startTime;
         // Call fuction to display statistics
         listener.onArraySorted(time, comp, swapping);
         g.dispose();
     }
-
+    
+    public void visualizeSelectionSort() {
+    	g = bs.getDrawGraphics();
+    	
+    	for (int i = 0; i < array.length - 1; i++) {
+            int minIndex = i;
+            if (minIndex > 0) setAllGreen(minIndex);
+            for (int j = i + 1; j < array.length; j++) {
+            	bars[i].setColor(ColorManager.BAR_RED);
+            	bars[i].draw(g);
+            	bs.show();
+            	setColorComparing2(minIndex, j, i);
+            	sleep(speed * 5);
+            	//bars[minIndex].clear(g);
+            	bars[j].clear(g);
+            	//bars[minIndex].setColor(ColorManager.BAR_CYAN);
+            	//bars[minIndex].draw(g);
+            	bars[j].setColor(ColorManager.BAR_WHITE);
+            	bars[j].draw(g);
+            	bs.show();
+            	sleep(speed * 4);
+                if (array[j] < array[minIndex]) {
+                	if (minIndex != i) {
+	                	bars[minIndex].clear(g);
+	                	bars[minIndex].setColor(ColorManager.BAR_WHITE);
+	                	bars[minIndex].draw(g);
+                	}
+                	bs.show();
+                    minIndex = j;
+                }
+            }
+            sleep(speed * 20);
+            swap(minIndex, i);
+            swapBar(minIndex, i);
+            bars[minIndex].clear(g);
+            bars[minIndex].setColor(ColorManager.BAR_WHITE);
+            bars[minIndex].draw(g);
+            bs.show();
+        }
+    	setAllGreen(array.length);
+    	g.dispose();
+    }
+    
+    public void setAllGreen(int i) {
+    	for (int j = 0; j < i; j++) {
+    		bars[j].clear(g);
+    		bars[j].setColor(ColorManager.BAR_GREEN);
+    		bars[j].draw(g);
+    	}
+    	bs.show();
+    }
+    
+    public void swapBar(int i, int j) {
+    	bars[i].clear(g);
+    	bars[j].clear(g);
+    	bars[i].setValue(array[i]);
+    	bars[j].setValue(array[j]);
+    	bars[i].setColor(ColorManager.BAR_BLUE);
+    	bars[j].setColor(ColorManager.BAR_ORANGE);
+    	bars[i].draw(g);
+    	bars[j].draw(g);
+    	bs.show();
+    	if (i < array.length - 1) sleep(speed * 40);
+    }
 
 	public interface SortedListener
     {
@@ -207,7 +270,7 @@ public class Visualizer {
         bars[i].draw(g);
         bars[j].draw(g);
         bs.show();
-        sleep();
+        sleep(speed);
         // Change color of the corrected bar to green, others to normal
         bars[i].clear(g);
         bars[j].clear(g);
@@ -224,17 +287,32 @@ public class Visualizer {
         bs.show();
     }
     
-    public void setColorComparing(int i, int j) {
-        bars[i].clear(g);
+    public void setColorComparing(int minIndex, int j) {
         bars[j].clear(g);
-        bars[i].setColor(ColorManager.BAR_YELLOW);
+        bars[minIndex].clear(g);
+        bars[minIndex].setColor(ColorManager.BAR_YELLOW);
+        bars[minIndex].draw(g);
         bars[j].setColor(ColorManager.BAR_YELLOW);
-        bars[i].draw(g);
+        
         bars[j].draw(g);
-        sleep();
+        sleep(speed);
         bs.show();
     }
-
+    
+    public void setColorComparing2(int minIndex, int j, int i) {
+        bars[j].clear(g);
+        if (minIndex != i) {
+	        bars[minIndex].clear(g);
+	        bars[minIndex].setColor(ColorManager.BAR_YELLOW);
+	        bars[minIndex].draw(g);
+        }
+        bars[j].setColor(ColorManager.BAR_YELLOW);
+        
+        bars[j].draw(g);
+        sleep(speed);
+        bs.show();
+    }
+    
     public void setColorNormal(int i, int j) {
         bars[i].clear(g);
         bars[j].clear(g);
@@ -245,7 +323,7 @@ public class Visualizer {
         bs.show();
     }
 
-    public void sleep() {
+    public void sleep(int speed) {
         try {
                 TimeUnit.MILLISECONDS.sleep(speed); // Sleep after each pass
         } catch (Exception ex) {
