@@ -24,7 +24,7 @@ public class ButtonPanel extends JPanel {
             buttons[i].setPreferredSize(new Dimension(BUTTON_WIDTH, BUTTON_HEIGHT));
             buttons[i].setFont(new Font("Arial", Font.PLAIN, 16));
             buttons[i].setForeground(Color.BLACK);
-            buttons[i].setBackground(Color.WHITE);
+            buttons[i].setBackground(Color.BLUE);
             buttons[i].addActionListener(createButtonActionListener(i));
             add(buttons[i]);
         }
