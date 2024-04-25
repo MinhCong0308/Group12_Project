@@ -24,7 +24,7 @@ public class Visualizer {
     // Check if exist array, draw the bars again if canvas reset
     private boolean existedArray;
     //The speed of sorting
-    private int speed = 40;
+    private int speed = 10;
 	
 	//Value for statistic
 	private long startTime, time;
@@ -52,7 +52,9 @@ public class Visualizer {
 	    array = new Integer[capacity];
 	    bars = new Bar[capacity];
 	    existedArray = true;
-
+        if(comp != 0){
+             listener.onArraySorted(0,0,0);
+        }
 	    // Get graphics
 	    g = bs.getDrawGraphics();
 	    g.setColor(ColorManager.SORTAPP_BACKGROUND);
@@ -86,7 +88,9 @@ public class Visualizer {
         array = new Integer[capacity];
         bars = new Bar[capacity];
         existedArray = true;
-
+        if(comp != 0){
+             listener.onArraySorted(0,0,0);
+        }
         // initial position
         double x = PADDING;
         int y = canvasHeight- PADDING;
@@ -187,14 +191,18 @@ public class Visualizer {
     
     public void visualizeSelectionSort() {
     	g = bs.getDrawGraphics();
-    	
+    	//set up variables for statistics
+        comp = 0;
+        swapping = 0;
+        startTime = System.nanoTime();
     	for (int i = 0; i < array.length - 1; i++) {
             int minIndex = i;
             if (minIndex > 0) setAllGreen(minIndex);
             for (int j = i + 1; j < array.length; j++) {
             	bars[i].setColor(ColorManager.BAR_RED);
             	bars[i].draw(g);
-            	bs.show();
+                bs.show();
+                comp++;
             	setColorComparing2(minIndex, j, i);
             	sleep(speed * 5);
             	//bars[minIndex].clear(g);
@@ -218,12 +226,16 @@ public class Visualizer {
             sleep(speed * 20);
             swap(minIndex, i);
             swapBar(minIndex, i);
+            swapping++;
             bars[minIndex].clear(g);
             bars[minIndex].setColor(ColorManager.BAR_WHITE);
             bars[minIndex].draw(g);
             bs.show();
         }
-    	setAllGreen(array.length);
+        setAllGreen(array.length);
+        time = System.nanoTime() - startTime;
+        // Call fuction to display statistics
+        listener.onArraySorted(time, comp, swapping);
     	g.dispose();
     }
     
@@ -246,7 +258,7 @@ public class Visualizer {
     	bars[i].draw(g);
     	bars[j].draw(g);
     	bs.show();
-    	if (i < array.length - 1) sleep(speed * 40);
+    	if (i < array.length - 1) sleep(speed);
     }
 
 	public interface SortedListener
