@@ -5,11 +5,9 @@ public class ColorManager {
 	
 	//Color for Button
 	public static Color CREATE_BUTTON = new Color(144,238,144);
-	public static Color BUTTON_BUBBLE = new Color(209,237,242);
 	public static Color BUTTON_ORANGE = new Color(254, 216, 177);
 	public static Color BUTTON_PINK = new Color(255, 182, 193);
 	public static Color BUTTON_YELLOW = new Color(255,255,0);
-	public static Color EXIT_BUTTON = new Color(194,197,204);
 	//Color for background in menu and sorting GUI
 	public static Color MENU_BACKGROUND = new Color(62,62,62);
 	public static Color SORTAPP_BACKGROUND = new Color(48,48,48);

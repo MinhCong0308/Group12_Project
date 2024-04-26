@@ -262,7 +262,6 @@ public class Visualizer {
             bars[i].setColor(ColorManager.BAR_RED);
             bars[i].draw(g);
             bs.show();
-            sleep(speed*10);
             comp++;
 
             while (j >= 0 && array[j] > key) {

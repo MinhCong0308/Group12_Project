@@ -21,21 +21,20 @@ public class ButtonPanel extends JPanel {
         buttons = new JButton[number];
         colorButton.add(ColorManager.CREATE_BUTTON);
         colorButton.add(ColorManager.CREATE_BUTTON);
-        colorButton.add(ColorManager.BUTTON_BUBBLE);
         colorButton.add(ColorManager.BUTTON_ORANGE);
+        colorButton.add(ColorManager.CREATE_BUTTON);
         colorButton.add(ColorManager.BUTTON_PINK);
         colorButton.add(ColorManager.BUTTON_YELLOW);
-        colorButton.add(ColorManager.EXIT_BUTTON);
+        colorButton.add(ColorManager.CREATE_BUTTON);
 
         // Initialize buttons
         String[] buttonLabels = {"Manually Create","Random Create", "Bubble Sort", "Selection Sort", "Insertion Sort", "Le Hau Sort", "Back to Menu"};
         for (int i = 0; i < buttons.length; i++) {
-        	Color color = colorButton.get(i);
             buttons[i] = new JButton(buttonLabels[i]);
             buttons[i].setPreferredSize(new Dimension(BUTTON_WIDTH, BUTTON_HEIGHT));
             buttons[i].setFont(new Font("Arial", Font.PLAIN, 16));
             buttons[i].setForeground(Color.BLACK);
-            buttons[i].setBackground(color);
+            buttons[i].setBackground(colorButton[i]);
             buttons[i].addActionListener(createButtonActionListener(i));
             add(buttons[i]);
         }
