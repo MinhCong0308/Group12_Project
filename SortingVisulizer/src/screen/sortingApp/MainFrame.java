@@ -3,7 +3,6 @@ package screen.sortingApp;
 import screen.menu.MainMenu;
 import screen.sortingApp.bar.Bar;
 import screen.sortingApp.color.ColorManager;
-import sorting.*;
 import screen.sortingApp.visualizer.*;
 import screen.sortingApp.button.*;
 import screen.sortingApp.canvas.*;
@@ -30,7 +29,7 @@ public class MainFrame extends JFrame implements PropertyChangeListener,
 	public static final long serialVersionUID = 10L;
 	private static final int WIDTH = 1280, HEIGHT = 800;
 	private static final int CAPACITY = 50;
-	private JPanel mainPanel, inputPanel, sliderPanel, inforPanel;
+	private JPanel mainPanel, inputPanel, inforPanel;
 	private ButtonPanel buttonPanel;
 	private JLabel capacityLabel, /*fpsLabel */ timeLabel, compLabel, swapLabel;
 
@@ -90,7 +89,7 @@ public class MainFrame extends JFrame implements PropertyChangeListener,
 		pack();
 
 
-		// sorting visualizer
+		// sorting visualizer(in case we do not create manually or random)
 		visualizer = new Visualizer(CAPACITY, this);
 		visualizer.createRandomArray(canvas.getWidth(), canvas.getHeight());
 
@@ -190,7 +189,7 @@ public class MainFrame extends JFrame implements PropertyChangeListener,
 				visualizer.visualizeSelectionSort();
 				break;
 			case 4:  // 1 sorting algorithm
-				
+				visualizer.visualizeInsertionSort();
 				break;
 			case 5: //1 sorting algorithm
 				break;

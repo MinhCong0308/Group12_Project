@@ -4,6 +4,7 @@ import javax.swing.JPanel;
 import javax.swing.JButton;
 import java.awt.*;
 import java.awt.event.ActionListener;
+import screen.sortingApp.color.ColorManager;
 
 public class ButtonPanel extends JPanel {
     public static final long serialVersionUID = 1L;
@@ -18,13 +19,13 @@ public class ButtonPanel extends JPanel {
         buttons = new JButton[number];
 
         // Initialize buttons
-        String[] buttonLabels = {"Manually Create","Random Create", "Bubble Sort", "Sorting Algo 2", "Sorting Algo 3", "Sorting Algo 4", "Back to Menu"};
+        String[] buttonLabels = {"Manually Create","Random Create", "Bubble Sort", "Selection Sort", "Insertion Sort", "Le Hau Sort", "Back to Menu"};
         for (int i = 0; i < buttons.length; i++) {
             buttons[i] = new JButton(buttonLabels[i]);
             buttons[i].setPreferredSize(new Dimension(BUTTON_WIDTH, BUTTON_HEIGHT));
             buttons[i].setFont(new Font("Arial", Font.PLAIN, 16));
             buttons[i].setForeground(Color.BLACK);
-            buttons[i].setBackground(Color.BLUE);
+            buttons[i].setBackground(ColorManager.BAR_CYAN);
             buttons[i].addActionListener(createButtonActionListener(i));
             add(buttons[i]);
         }

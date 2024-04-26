@@ -10,6 +10,10 @@ import java.util.Arrays;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
+//RED_BAR: represent for the pivot(marked point using for selection and insertion)
+//CYON_BAR: represent for local sorted array.
+//GREEN_BAR: represent for global sorted array
+//Yellow_BAR: represent for colorCombaring
 public class Visualizer {
     // Padding at the 2 ends
     private static final int PADDING = 20;
@@ -38,12 +42,8 @@ public class Visualizer {
 	
 	public Visualizer(int capacity, SortedListener listener) {
 		this.capacity = capacity;
-        //this.speed = (int) (1000.0/fps);
         this.listener = listener;
-        //startTime = time = comp = swapping = 0;
         originalColor = ColorManager.BAR_WHITE;
-        //comparingColor = Color.YELLOW;
-        //swappingColor = ColorManager.BAR_RED;
         bs = listener.getBufferStrategy();
         existedArray = false;
 	}
@@ -159,7 +159,7 @@ public class Visualizer {
                 // Set color for 2 bars that are being compared
                 comp++;
                 setColorComparing(j, j + 1);
-                sleep(speed);
+                sleep(speed*20);
                 if (array[j] > array[j + 1]) {
                     // swap arr[j+1] and arr[j]
                     swapping++;
@@ -182,9 +182,9 @@ public class Visualizer {
         bars[0].setColor(ColorManager.BAR_GREEN);
         bars[0].draw(g);
         bs.show();
-        // Compute time takeng 
+        // Compute time taken
         time = System.nanoTime() - startTime;
-        // Call fuction to display statistics
+        // Call function to display statistics
         listener.onArraySorted(time, comp, swapping);
         g.dispose();
     }
@@ -203,7 +203,7 @@ public class Visualizer {
             	bars[i].draw(g);
                 bs.show();
                 comp++;
-            	setColorComparing2(minIndex, j, i);
+            	setColorComparingForSelectionSort(minIndex, j, i);
             	sleep(speed * 5);
             	//bars[minIndex].clear(g);
             	bars[j].clear(g);
@@ -223,7 +223,7 @@ public class Visualizer {
                     minIndex = j;
                 }
             }
-            sleep(speed * 20);
+            sleep(speed);
             swap(minIndex, i);
             swapBar(minIndex, i);
             swapping++;
@@ -234,7 +234,7 @@ public class Visualizer {
         }
         setAllGreen(array.length);
         time = System.nanoTime() - startTime;
-        // Call fuction to display statistics
+        // Call function to display statistics
         listener.onArraySorted(time, comp, swapping);
     	g.dispose();
     }
@@ -246,6 +246,78 @@ public class Visualizer {
     		bars[j].draw(g);
     	}
     	bs.show();
+    }
+    public void visualizeInsertionSort() {
+        g = bs.getDrawGraphics();
+        // Set up variables for statistics
+        comp = 0;
+        swapping = 0;
+        startTime = System.nanoTime();
+
+        for (int i = 1; i < array.length; i++) {
+            int key = array[i];
+            int j = i - 1;
+
+            // Visualize the comparison
+            bars[i].setColor(ColorManager.BAR_RED);
+            bars[i].draw(g);
+            bs.show();
+            comp++;
+
+            while (j >= 0 && array[j] > key) {
+                // Shift elements greater than key to the right
+                // Visualize swapping
+                swap(j+1, j);
+                swapBarInsertionSort(j + 1, j);
+                swapping++;
+                j--;
+
+                if (j >= 0) {
+                    setColorComparingForInsertionSort(j, i);
+                    bs.show();
+                    comp++;
+                    sleep(speed * 20);
+                    if(array[j] <= key) bars[j].clear(g);
+                }
+            }
+            for(int k = 0; k < i; k ++) {
+            	bars[k].clear(g);
+            	bars[k].setColor(ColorManager.BAR_CYAN); //change cyanColor at here !!
+            	bars[k].draw(g);
+            }
+            bs.show();
+            //shifting to the right for next key.
+            array[j + 1] = key;
+            sleep(speed);
+        }
+
+        setAllGreen(array.length);
+        time = System.nanoTime() - startTime;
+        // Call function to display statistics
+        listener.onArraySorted(time, comp, swapping);
+        g.dispose();
+    }
+    public void setColorComparingForInsertionSort(int j, int i) {
+        bars[j].clear(g);
+        bars[j].setColor(ColorManager.BAR_YELLOW);
+        bars[j].draw(g);
+        sleep(speed);
+        bs.show();
+    }
+
+
+    public void swapBarInsertionSort(int i, int j) { 
+        bars[i].clear(g);
+        bars[j].clear(g);
+        bars[i].setValue(array[i]);
+        bars[j].setValue(array[j]);
+        bars[i].setColor(ColorManager.BAR_CYAN); //Change cyanColor at here
+        bars[j].setColor(ColorManager.BAR_RED);
+        bars[i].draw(g);
+        bars[j].draw(g);
+        bs.show();
+        if (i < array.length - 1) sleep(speed);
+        
     }
     
     public void swapBar(int i, int j) {
@@ -282,7 +354,7 @@ public class Visualizer {
         bars[i].draw(g);
         bars[j].draw(g);
         bs.show();
-        sleep(speed);
+        sleep(speed*5);
         // Change color of the corrected bar to green, others to normal
         bars[i].clear(g);
         bars[j].clear(g);
@@ -297,8 +369,7 @@ public class Visualizer {
         bars[i].draw(g);
         bars[j].draw(g);
         bs.show();
-    }
-    
+    }    
     public void setColorComparing(int minIndex, int j) {
         bars[j].clear(g);
         bars[minIndex].clear(g);
@@ -311,7 +382,7 @@ public class Visualizer {
         bs.show();
     }
     
-    public void setColorComparing2(int minIndex, int j, int i) {
+    public void setColorComparingForSelectionSort(int minIndex, int j, int i) {
         bars[j].clear(g);
         if (minIndex != i) {
 	        bars[minIndex].clear(g);

@@ -1,0 +1,414 @@
+package screen.sortingApp.visualizer;
+import javax.swing.JOptionPane;
+import java.awt.image.BufferStrategy;
+import java.awt.Color;
+import java.awt.Graphics;
+import screen.sortingApp.color.*;
+import screen.sortingApp.bar.Bar;
+import sorting.*;
+import java.util.Arrays;
+import java.util.Random;
+import java.util.concurrent.TimeUnit;
+
+//RED_BAR: represent for the pivot(marked point using for selection and insertion)
+//CYON_BAR: represent for local sorted array.
+//GREEN_BAR: represent for global sorted array
+//Yellow_BAR: represent for colorCombaring
+public class Visualizer {
+    // Padding at the 2 ends
+    private static final int PADDING = 20;
+    // Max and Min height of bars
+    private static final int MAX_BAR_HEIGHT = 350, MIN_BAR_HEIGHT = 30;
+    // Array of integers store the values
+    private Integer[] array;
+    // The number of elements that user want to sort
+    private int capacity;
+    // Array of bars that will display on canvas
+    private Bar[] bars;
+    // Check if exist array, draw the bars again if canvas reset
+    private boolean existedArray;
+    //The speed of sorting
+    private int speed = 10;
+	
+	//Value for statistic
+	private long startTime, time;
+	private int comp, swapping;
+	
+	private Color originalColor; /*swappingColor, comparingColor;*/
+	private BufferStrategy bs;
+	private Graphics g;
+	
+	private SortedListener listener;
+	
+	public Visualizer(int capacity, SortedListener listener) {
+		this.capacity = capacity;
+        this.listener = listener;
+        originalColor = ColorManager.BAR_WHITE;
+        bs = listener.getBufferStrategy();
+        existedArray = false;
+	}
+	
+	public void createManualArray(int canvasWidth, int canvasHeight) {
+	    array = new Integer[capacity];
+	    bars = new Bar[capacity];
+	    existedArray = true;
+        if(comp != 0){
+             listener.onArraySorted(0,0,0);
+        }
+	    // Get graphics
+	    g = bs.getDrawGraphics();
+	    g.setColor(ColorManager.SORTAPP_BACKGROUND);
+	    g.fillRect(0, 0, canvasWidth, canvasHeight);
+
+	    // Prompt user to enter array elements manually
+	    for (int i = 0; i < array.length; i++) {
+	        String input = JOptionPane.showInputDialog("Enter value for element " + (i + 1) + ":");
+	        try {
+	            int value = Integer.parseInt(input);
+	            array[i] = value;
+	        } catch (NumberFormatException e) {
+	            // Handle invalid input
+	            JOptionPane.showMessageDialog(null, "Invalid input! Please enter a valid integer.", "Error", JOptionPane.ERROR_MESSAGE);
+	            return;
+	        }
+
+	        // Draw the bar representing the entered value
+	        double x = PADDING + i * ((canvasWidth - PADDING * 2.0) / capacity);
+	        int barHeight = Math.min(MAX_BAR_HEIGHT, Math.max(MIN_BAR_HEIGHT, array[i]));
+	        Bar bar = new Bar((int) x, canvasHeight - PADDING, (int) ((canvasWidth - PADDING * 2.0) / capacity), barHeight, originalColor);
+	        bar.draw(g);
+	        bars[i] = bar;
+	    }
+
+	    bs.show();
+	    g.dispose();
+	}
+	
+	public void createRandomArray(int canvasWidth, int canvasHeight) {
+        array = new Integer[capacity];
+        bars = new Bar[capacity];
+        existedArray = true;
+        if(comp != 0){
+             listener.onArraySorted(0,0,0);
+        }
+        // initial position
+        double x = PADDING;
+        int y = canvasHeight- PADDING;
+
+        // width of all bars
+        double width = (double) (canvasWidth - PADDING*2) / capacity;
+
+        // get graphics
+        g = bs.getDrawGraphics();
+        g.setColor(ColorManager.SORTAPP_BACKGROUND);
+        g.fillRect(0, 0, canvasWidth, canvasHeight);
+
+        Random rand = new Random();
+        int value;
+        Bar bar;
+        for (int i = 0; i < array.length; i++)
+        {
+            value = rand.nextInt(MAX_BAR_HEIGHT) + MIN_BAR_HEIGHT;
+            array[i] = value;
+
+            bar = new Bar((int)x, y, (int) width, value, originalColor);
+            bar.draw(g);
+            bars[i] = bar;
+
+            // move to the next bar
+            x += width;
+        }
+
+        bs.show();
+        g.dispose();
+    }
+
+
+
+    // for restore purpose
+    public void drawArray()
+    {
+        if (!existedArray)
+            return;
+
+        g = bs.getDrawGraphics();
+
+        for (int i = 0; i < bars.length; i++)
+        {
+            bars[i].draw(g);
+        }
+
+        bs.show();
+        g.dispose();
+    }
+
+    public void setCapacity(int capacity)
+    {
+        this.capacity = capacity;
+    }
+
+    public void visualizeBubbleSort() {
+        // Get graphics from buffer
+        g = bs.getDrawGraphics();
+        //set up variables for statistics
+        comp = 0;
+        swapping = 0;
+        startTime = System.nanoTime();
+        for (int i = 0; i < array.length - 1; i++) {
+            for (int j = 0; j < array.length - i - 1; j++) {
+                // Set color for 2 bars that are being compared
+                comp++;
+                setColorComparing(j, j + 1);
+                sleep(speed);
+                if (array[j] > array[j + 1]) {
+                    // swap arr[j+1] and arr[j]
+                    swapping++;
+                    swap(j, j + 1);
+                    swapBarBubbleSort(j, j + 1, i);
+                } else {
+                    // Set the bar back to normal color if not swapping
+                    setColorNormal(j, j + 1);
+                }
+            }
+            // Set the bar with the correct position green
+            bars[bars.length - i - 1].clear(g);
+            bars[bars.length - i - 1].setColor(ColorManager.BAR_GREEN);
+            bars[bars.length - i - 1].draw(g);
+            bs.show();
+            sleep(speed);
+        }
+        // Set the first bar to green
+        bars[0].clear(g);
+        bars[0].setColor(ColorManager.BAR_GREEN);
+        bars[0].draw(g);
+        bs.show();
+        // Compute time taken
+        time = System.nanoTime() - startTime;
+        // Call function to display statistics
+        listener.onArraySorted(time, comp, swapping);
+        g.dispose();
+    }
+    
+    public void visualizeSelectionSort() {
+    	g = bs.getDrawGraphics();
+    	//set up variables for statistics
+        comp = 0;
+        swapping = 0;
+        startTime = System.nanoTime();
+    	for (int i = 0; i < array.length - 1; i++) {
+            int minIndex = i;
+            if (minIndex > 0) setAllGreen(minIndex);
+            for (int j = i + 1; j < array.length; j++) {
+            	bars[i].setColor(ColorManager.BAR_RED);
+            	bars[i].draw(g);
+                bs.show();
+                comp++;
+            	setColorComparingForSelectionSort(minIndex, j, i);
+            	sleep(speed * 5);
+            	//bars[minIndex].clear(g);
+            	bars[j].clear(g);
+            	//bars[minIndex].setColor(ColorManager.BAR_CYAN);
+            	//bars[minIndex].draw(g);
+            	bars[j].setColor(ColorManager.BAR_WHITE);
+            	bars[j].draw(g);
+            	bs.show();
+            	sleep(speed * 4);
+                if (array[j] < array[minIndex]) {
+                	if (minIndex != i) {
+	                	bars[minIndex].clear(g);
+	                	bars[minIndex].setColor(ColorManager.BAR_WHITE);
+	                	bars[minIndex].draw(g);
+                	}
+                	bs.show();
+                    minIndex = j;
+                }
+            }
+            sleep(speed);
+            swap(minIndex, i);
+            swapBar(minIndex, i);
+            swapping++;
+            bars[minIndex].clear(g);
+            bars[minIndex].setColor(ColorManager.BAR_WHITE);
+            bars[minIndex].draw(g);
+            bs.show();
+        }
+        setAllGreen(array.length);
+        time = System.nanoTime() - startTime;
+        // Call function to display statistics
+        listener.onArraySorted(time, comp, swapping);
+    	g.dispose();
+    }
+    
+    public void setAllGreen(int i) {
+    	for (int j = 0; j < i; j++) {
+    		bars[j].clear(g);
+    		bars[j].setColor(ColorManager.BAR_GREEN);
+    		bars[j].draw(g);
+    	}
+    	bs.show();
+    }
+    public void visualizeInsertionSort() {
+        g = bs.getDrawGraphics();
+        // Set up variables for statistics
+        comp = 0;
+        swapping = 0;
+        startTime = System.nanoTime();
+
+        for (int i = 1; i < array.length; i++) {
+            int key = array[i];
+            int j = i - 1;
+
+            // Visualize the comparison
+            bars[key].clear(g);
+            bars[key].setColor(ColorManager.BAR_RED);
+            bars[key].draw(g);
+            bs.show();
+            comp++;
+
+            while (j >= 0 && array[j] > key) {
+                // Shift elements greater than key to the right
+                // Visualize swapping
+                swap(j+1, j);
+                swapBarInsertionSort(j + 1, j);
+                swapping++;
+                j--;
+
+                if (j >= 0) {
+                    // Visualize the comparison
+                    setColorComparingForInsertionSort(j, i);
+                    bs.show();
+                    comp++;
+                    sleep(speed * 20);
+                }
+            }
+
+            // Insert the key into its correct position
+            array[j + 1] = key;
+            // Visualize the insertion
+            if (j >= 0) setColorComparingForInsertionSort(j, i);
+            bs.show();
+            sleep(speed * 5);
+        }
+
+        setAllGreen(array.length);
+        time = System.nanoTime() - startTime;
+        // Call function to display statistics
+        listener.onArraySorted(time, comp, swapping);
+        g.dispose();
+    }
+    public void setColorComparingForInsertionSort(int j, int i) {
+        bars[j].clear(g);
+        bars[j].setColor(ColorManager.BAR_YELLOW);
+        bars[j].draw(g);
+        sleep(speed*20);
+        bs.show();
+    }
+
+
+    public void swapBarInsertionSort(int i, int j) {
+        bars[i].clear(g);
+        bars[j].clear(g);
+        bars[i].setValue(array[i]);
+        bars[j].setValue(array[j]);
+        bars[i].setColor(ColorManager.BAR_BLUE);
+        bars[j].setColor(ColorManager.BAR_ORANGE);
+        bars[i].draw(g);
+        bars[j].draw(g);
+        bs.show();
+        if (i < array.length - 1) sleep(speed);
+    }
+    
+    public void swapBar(int i, int j) {
+    	bars[i].clear(g);
+    	bars[j].clear(g);
+    	bars[i].setValue(array[i]);
+    	bars[j].setValue(array[j]);
+    	bars[i].setColor(ColorManager.BAR_BLUE);
+    	bars[j].setColor(ColorManager.BAR_ORANGE);
+    	bars[i].draw(g);
+    	bars[j].draw(g);
+    	bs.show();
+    	if (i < array.length - 1) sleep(speed);
+    }
+
+	public interface SortedListener
+    {
+        void onArraySorted(long elapsedTime, int comparison, int swapping);
+        BufferStrategy getBufferStrategy();
+    }
+
+    public void swap(int i, int j) {
+        int temp = array[i];
+        array[i] = array[j];
+        array[j] = temp;
+    }
+    
+    public void swapBarBubbleSort(int i, int j, int pivot) {
+        // Change color of 2 swapping bar to red
+        bars[i].clear(g);
+        bars[j].clear(g);
+        bars[i].setColor(ColorManager.BAR_RED);
+        bars[j].setColor(ColorManager.BAR_RED);
+        bars[i].draw(g);
+        bars[j].draw(g);
+        bs.show();
+        sleep(speed);
+        // Change color of the corrected bar to green, others to normal
+        bars[i].clear(g);
+        bars[j].clear(g);
+        bars[i].setValue(array[i]);
+        bars[j].setValue(array[j]);
+        bars[i].setColor(ColorManager.BAR_WHITE);
+        if (j == bars.length - pivot - 1) {
+            bars[j].setColor(ColorManager.BAR_GREEN);
+        } else {
+            bars[j].setColor(ColorManager.BAR_WHITE);
+        }
+        bars[i].draw(g);
+        bars[j].draw(g);
+        bs.show();
+    }    
+    public void setColorComparing(int minIndex, int j) {
+        bars[j].clear(g);
+        bars[minIndex].clear(g);
+        bars[minIndex].setColor(ColorManager.BAR_YELLOW);
+        bars[minIndex].draw(g);
+        bars[j].setColor(ColorManager.BAR_YELLOW);
+        
+        bars[j].draw(g);
+        sleep(speed);
+        bs.show();
+    }
+    
+    public void setColorComparingForSelectionSort(int minIndex, int j, int i) {
+        bars[j].clear(g);
+        if (minIndex != i) {
+	        bars[minIndex].clear(g);
+	        bars[minIndex].setColor(ColorManager.BAR_YELLOW);
+	        bars[minIndex].draw(g);
+        }
+        bars[j].setColor(ColorManager.BAR_YELLOW);
+        
+        bars[j].draw(g);
+        sleep(speed);
+        bs.show();
+    }
+    
+    public void setColorNormal(int i, int j) {
+        bars[i].clear(g);
+        bars[j].clear(g);
+        bars[i].setColor(ColorManager.BAR_WHITE);
+        bars[j].setColor(ColorManager.BAR_WHITE);
+        bars[i].draw(g);
+        bars[j].draw(g);
+        bs.show();
+    }
+
+    public void sleep(int speed) {
+        try {
+                TimeUnit.MILLISECONDS.sleep(speed); // Sleep after each pass
+        } catch (Exception ex) {
+                // Handle exception
+        }
+    }
+}
