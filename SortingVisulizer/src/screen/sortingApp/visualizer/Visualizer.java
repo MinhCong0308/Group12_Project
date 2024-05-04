@@ -499,13 +499,13 @@ public class Visualizer {
             // Visualize the left and right parts
             visualizeDivide(low, mid, high);
 
-            // Merge the two sorted subarrays into one
+            // Merge the two sorted subarrays
             merge(low, mid, high);
         }
     }
 
     private void merge(int low, int mid, int high) {
-        // Merge the two sorted subarrays into one
+        // Merge the two sorted subarrays
         int[] temp = new int[array.length];
         int i = low, j = mid + 1, k = low;
 
@@ -526,7 +526,7 @@ public class Visualizer {
             temp[k++] = array[j++];
         }
 
-        // Copy the temporary array back to the original array
+        // Back to the original array
         for (i = low; i <= high; i++) {
             array[i] = temp[i];
         }
@@ -547,21 +547,21 @@ public class Visualizer {
         // The left part in light blue
         for (int i = low; i <= mid; i++) {
             bars[i].clear(g);
-            bars[i].setColor(ColorManager.BAR_CYAN); // Using the existing BAR_CYAN color
+            bars[i].setColor(ColorManager.BAR_CYAN); // Change Color here
             bars[i].draw(g);
         }
 
         // The right part in dark blue
         for (int i = mid + 1; i <= high; i++) {
             bars[i].clear(g);
-            bars[i].setColor(ColorManager.BAR_BLUE); // Using the existing BAR_BLUE color
+            bars[i].setColor(ColorManager.BAR_BLUE); // Change color here
             bars[i].draw(g);
         }
 
         bs.show();
         sleep(speed * 10);
 
-        // Restore the original color of the bars
+        // Restore the color of bars
         for (int i = low; i <= high; i++) {
             bars[i].clear(g);
             bars[i].setColor(ColorManager.BAR_WHITE);
