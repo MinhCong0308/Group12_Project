@@ -544,14 +544,14 @@ public class Visualizer {
         int leftLength = mid - low + 1;
         int rightLength = high - mid;
 
-        // The left part in light blue
+        // The left part
         for (int i = low; i <= mid; i++) {
             bars[i].clear(g);
             bars[i].setColor(ColorManager.BAR_CYAN); // Change Color here
             bars[i].draw(g);
         }
 
-        // The right part in dark blue
+        // The right part
         for (int i = mid + 1; i <= high; i++) {
             bars[i].clear(g);
             bars[i].setColor(ColorManager.BAR_BLUE); // Change color here
@@ -559,7 +559,7 @@ public class Visualizer {
         }
 
         bs.show();
-        sleep(speed * 10);
+        sleep(speed * 20);
 
         // Restore the color of bars
         for (int i = low; i <= high; i++) {
@@ -573,9 +573,10 @@ public class Visualizer {
         g.setColor(ColorManager.BAR_YELLOW);
         bars[index].clear(g);
         bars[index].setValue(value);
+        bars[index].setColor(ColorManager.BAR_RED);
         bars[index].draw(g);
         bs.show();
-        sleep(speed * 10);
+        sleep(speed * 20);
         bars[index].clear(g);
         bars[index].setValue(array[index]);
         bars[index].setColor(ColorManager.BAR_WHITE);
