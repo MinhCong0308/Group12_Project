@@ -28,7 +28,7 @@ public class ButtonPanel extends JPanel {
         colorButton.add(ColorManager.EXIT_BUTTON);
 
         // Initialize buttons
-        String[] buttonLabels = {"Manually Create","Random Create", "Bubble Sort", "Selection Sort", "Insertion Sort", "Le Hau Sort", "Back to Menu"};
+        String[] buttonLabels = {"Manually Create", "Random Create", "Bubble Sort", "Selection Sort", "Insertion Sort", "Merge Sort", "Back to Menu"};
         for (int i = 0; i < buttons.length; i++) {
         	Color color = colorButton.get(i);
             buttons[i] = new JButton(buttonLabels[i]);
@@ -39,7 +39,7 @@ public class ButtonPanel extends JPanel {
             buttons[i].addActionListener(createButtonActionListener(i));
             add(buttons[i]);
         }
-
+        
         // Set layout
         setLayout(new GridLayout(number, 1, 0, 10));
     }

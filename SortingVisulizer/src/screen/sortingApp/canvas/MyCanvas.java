@@ -11,6 +11,7 @@ public class MyCanvas extends Canvas{
 		super();
 		this.listener = listener;
 	}
+	
     public void paint(Graphics g)
     {
         super.paint(g);

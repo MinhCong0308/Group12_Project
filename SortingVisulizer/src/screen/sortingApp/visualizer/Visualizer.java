@@ -291,13 +291,14 @@ public class Visualizer {
             array[j + 1] = key;
             sleep(speed);
         }
-
+        
         setAllGreen(array.length);
         time = System.nanoTime() - startTime;
         // Call function to display statistics
         listener.onArraySorted(time, comp, swapping);
         g.dispose();
     }
+
     public void setColorComparingForInsertionSort(int j, int i) {
         bars[j].clear(g);
         bars[j].setColor(ColorManager.BAR_YELLOW);
@@ -371,6 +372,7 @@ public class Visualizer {
         bars[j].draw(g);
         bs.show();
     }    
+
     public void setColorComparing(int minIndex, int j) {
         bars[j].clear(g);
         bars[minIndex].clear(g);
@@ -394,6 +396,190 @@ public class Visualizer {
         
         bars[j].draw(g);
         sleep(speed);
+        bs.show();
+    }
+
+    public void visualizeHeapSort() {
+        g = bs.getDrawGraphics();
+        // Set up variables for statistics
+        comp = 0;
+        swapping = 0;
+        startTime = System.nanoTime();
+    
+        // max heap
+        buildMaxHeap();
+    
+        // Extract elements from heap one by one
+        for (int i = array.length - 1; i >= 0; i--) {
+            swap(0, i); // Move cur root to end
+            swapBarHeapSort(0, i); // Visualize swapping
+            swapping++;
+            maxHeapify(0, i); // Call maxHeapify on the reduced heap
+            setColorNormal(0, i); // Reset color
+        }
+    
+        time = System.nanoTime() - startTime;
+        // Call function to display statistics
+        listener.onArraySorted(time, comp, swapping);
+        g.dispose();
+    }
+    
+    private void buildMaxHeap() {
+        for (int i = array.length / 2 - 1; i >= 0; i--) {
+            maxHeapify(i, array.length);
+        }
+    }
+    
+    private void maxHeapify(int i, int heapSize) {
+        int largest = i;
+        int left = 2 * i + 1;
+        int right = 2 * i + 2;
+    
+        if (left < heapSize && array[left] > array[largest]) {
+            largest = left;
+        }
+    
+        if (right < heapSize && array[right] > array[largest]) {
+            largest = right;
+        }
+    
+        if (largest != i) {
+            swap(i, largest);
+            swapBarHeapSort(i, largest); // Visualize swapping
+            swapping++;
+            maxHeapify(largest, heapSize);
+        }
+    }
+    
+    private void swapBarHeapSort(int i, int j) {
+        bars[i].clear(g);
+        bars[j].clear(g);
+        bars[i].setValue(array[i]);
+        bars[j].setValue(array[j]);
+        bars[i].setColor(ColorManager.BAR_RED);
+        bars[j].setColor(ColorManager.BAR_RED);
+        bars[i].draw(g);
+        bars[j].draw(g);
+        bs.show();
+        sleep(speed * 10);
+        bars[i].clear(g);
+        bars[j].clear(g);
+        bars[i].setValue(array[i]);
+        bars[j].setValue(array[j]);
+        bars[i].setColor(ColorManager.BAR_WHITE);
+        bars[j].setColor(ColorManager.BAR_WHITE);
+        bars[i].draw(g);
+        bars[j].draw(g);
+        bs.show();
+    }
+    
+    public void visualizeMergeSort() {
+        g = bs.getDrawGraphics();
+        // Set up variables for statistics
+        comp = 0;
+        swapping = 0;
+        startTime = System.nanoTime();
+
+        mergeSort(0, array.length - 1);
+
+        setAllGreen(array.length);
+        time = System.nanoTime() - startTime;
+        // Call function to display statistics
+        listener.onArraySorted(time, comp, swapping);
+        g.dispose();
+    }
+
+    private void mergeSort(int low, int high) {
+        if (low < high) {
+            int mid = low + (high - low) / 2;
+
+            mergeSort(low, mid);
+            mergeSort(mid + 1, high);
+
+            // Visualize the left and right parts
+            visualizeDivide(low, mid, high);
+
+            // Merge the two sorted subarrays into one
+            merge(low, mid, high);
+        }
+    }
+
+    private void merge(int low, int mid, int high) {
+        // Merge the two sorted subarrays into one
+        int[] temp = new int[array.length];
+        int i = low, j = mid + 1, k = low;
+
+        while (i <= mid && j <= high) {
+            comp++;
+            if (array[i] <= array[j]) {
+                temp[k++] = array[i++];
+            } else {
+                temp[k++] = array[j++];
+            }
+        }
+
+        while (i <= mid) {
+            temp[k++] = array[i++];
+        }
+
+        while (j <= high) {
+            temp[k++] = array[j++];
+        }
+
+        // Copy the temporary array back to the original array
+        for (i = low; i <= high; i++) {
+            array[i] = temp[i];
+        }
+
+        // Visualize swapping
+        for (i = low; i <= high; i++) {
+            if (i != k) {
+                swapBarMergeSort(i, temp[i]);
+                swapping++;
+            }
+        }
+    }
+
+    private void visualizeDivide(int low, int mid, int high) {
+        int leftLength = mid - low + 1;
+        int rightLength = high - mid;
+
+        // The left part in light blue
+        for (int i = low; i <= mid; i++) {
+            bars[i].clear(g);
+            bars[i].setColor(ColorManager.BAR_CYAN); // Using the existing BAR_CYAN color
+            bars[i].draw(g);
+        }
+
+        // The right part in dark blue
+        for (int i = mid + 1; i <= high; i++) {
+            bars[i].clear(g);
+            bars[i].setColor(ColorManager.BAR_BLUE); // Using the existing BAR_BLUE color
+            bars[i].draw(g);
+        }
+
+        bs.show();
+        sleep(speed * 10);
+
+        // Restore the original color of the bars
+        for (int i = low; i <= high; i++) {
+            bars[i].clear(g);
+            bars[i].setColor(ColorManager.BAR_WHITE);
+            bars[i].draw(g);
+        }
+    }
+
+    private void swapBarMergeSort(int index, int value) {
+        g.setColor(ColorManager.BAR_YELLOW);
+        bars[index].clear(g);
+        bars[index].setValue(value);
+        bars[index].draw(g);
+        bs.show();
+        sleep(speed * 10);
+        bars[index].clear(g);
+        bars[index].setValue(array[index]);
+        bars[index].setColor(ColorManager.BAR_WHITE);
+        bars[index].draw(g);
         bs.show();
     }
     

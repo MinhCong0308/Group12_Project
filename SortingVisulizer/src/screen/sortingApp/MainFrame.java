@@ -192,6 +192,7 @@ public class MainFrame extends JFrame implements PropertyChangeListener,
 				visualizer.visualizeInsertionSort();
 				break;
 			case 5: //1 sorting algorithm
+				visualizer.visualizeMergeSort();
 				break;
 			case 6:  //
 				new MainMenu();
