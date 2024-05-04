@@ -155,6 +155,7 @@ public class Visualizer {
         swapping = 0;
         startTime = System.nanoTime();
         for (int i = 0; i < array.length - 1; i++) {
+            boolean hasSwap = false;
             for (int j = 0; j < array.length - i - 1; j++) {
                 // Set color for 2 bars that are being compared
                 comp++;
@@ -165,6 +166,7 @@ public class Visualizer {
                     swapping++;
                     swap(j, j + 1);
                     swapBarBubbleSort(j, j + 1, i);
+                    hasSwap = true;
                 } else {
                     // Set the bar back to normal color if not swapping
                     setColorNormal(j, j + 1);
@@ -176,6 +178,15 @@ public class Visualizer {
             bars[bars.length - i - 1].draw(g);
             bs.show();
             sleep(speed);
+            if (!hasSwap){
+                for (int j = 0; j < array.length - 1; j++){
+                    bars[j].clear(g);
+                    bars[j].setColor(ColorManager.BAR_GREEN);
+                    bars[j].draw(g);
+                }
+                bs.show();
+                return;
+            }
         }
         // Set the first bar to green
         bars[0].clear(g);
