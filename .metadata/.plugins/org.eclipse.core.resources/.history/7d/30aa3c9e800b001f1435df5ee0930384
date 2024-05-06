@@ -210,7 +210,7 @@ public class MainFrame extends JFrame implements PropertyChangeListener,
 
 	// showing statistics when sorting is completed
 	public void onArraySorted(long elapsedTime, int comp, int swapping) {
-		timeLabel.setText("Elapsed Time: " + (int) (elapsedTime / 1000.0) + " s");
+		timeLabel.setText("Elapsed Time: " + (int) (elapsedTime / 1000.0) + " µs");
 		compLabel.setText("Comparisons: " + comp);
 		swapLabel.setText("Swaps: " + swapping);
 	}

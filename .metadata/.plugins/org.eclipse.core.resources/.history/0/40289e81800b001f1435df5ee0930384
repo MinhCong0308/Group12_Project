@@ -260,11 +260,11 @@ public class Visualizer {
     }
     public void visualizeInsertionSort() {
     	InsertionSort insertionSort = new InsertionSort(array, bars, g, speed, bs);
-    	startTime = System.currentTimeMillis();
+    	startTime = System.nanoTime();
     	insertionSort.visualize();
     	comp = insertionSort.getComp();
     	swapping = insertionSort.getSwap();
-    	time = System.currentTimeMillis() - startTime;
+    	time = System.nanoTime() - startTime;
     	listener.onArraySorted(time, comp, swapping);
         g.dispose();
     }

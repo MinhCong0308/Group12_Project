@@ -27,7 +27,7 @@ public class InsertionSort extends Sorting {
             while (j >= 0 && array[j] > key) {
                 // Shift elements greater than key to the right
                 // Visualize swapping
-                setColorComparing(j, i); // set in case the first comparison.
+                setColorComparing(j, i);
                 bs.show();
                 sleep(speed * 20);
                 swap(j+1, j);

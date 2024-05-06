@@ -21,29 +21,26 @@ public class InsertionSort extends Sorting {
             bars[i].setColor(ColorManager.BAR_RED);
             bars[i].draw(g);
             bs.show();
-            sleep(speed * 20);
+            sleep(speed * 10);
             comp++;
 
             while (j >= 0 && array[j] > key) {
                 // Shift elements greater than key to the right
                 // Visualize swapping
-                setColorComparing(j, i); // set in case the first comparison.
-                bs.show();
-                sleep(speed * 20);
                 swap(j+1, j);
-                swapBars(j + 1, j, ColorManager.BAR_CYAN, ColorManager.BAR_RED);
+                swapBar(j + 1, j);
                 swapping++;
-                j--; 
+                j--;
 
                 if (j >= 0) {
-                	setColorComparing(j, i);
-                	bs.show();
+                    setColorComparing(j, i);
+                    bs.show();
                     comp++;
                     sleep(speed * 20);
                     if(array[j] <= key) bars[j].clear(g);
                 }
             }
-            for(int k = 0; k <= i; k ++) {
+            for(int k = 0; k < i; k ++) {
                 bars[k].clear(g);
                 bars[k].setColor(ColorManager.BAR_CYAN);
                 bars[k].draw(g);
@@ -51,7 +48,7 @@ public class InsertionSort extends Sorting {
             bs.show();
             //shifting to the right for next key.
             array[j + 1] = key;
-            sleep(speed * 20);
+            sleep(speed);
         }
         setAllGreen(array.length);
     }
@@ -60,8 +57,21 @@ public class InsertionSort extends Sorting {
         bars[j].clear(g);
         bars[j].setColor(ColorManager.BAR_YELLOW);
         bars[j].draw(g);
-        sleep(speed * 10);
+        sleep(speed);
         bs.show();
-    } 
+    }
+
+    private void swapBar(int i, int j) {
+        bars[i].clear(g);
+        bars[j].clear(g);
+        bars[i].setValue(array[i]);
+        bars[j].setValue(array[j]);
+        bars[i].setColor(ColorManager.BAR_CYAN);
+        bars[j].setColor(ColorManager.BAR_RED);
+        bars[i].draw(g);
+        bars[j].draw(g);
+        bs.show();
+        if (i < array.length - 1) sleep(speed);
+    }
 }
 
