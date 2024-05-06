@@ -16,11 +16,10 @@ public class InsertionSort extends Sorting {
         for (int i = 1; i < array.length; i++) {
             int key = array[i];
             int j = i - 1;
-            setColorComparing(j, i);
+
             // Visualize the comparison
             bars[i].setColor(ColorManager.BAR_RED);
             bars[i].draw(g);
-            
             bs.show();
             sleep(speed * 20);
             comp++;
@@ -28,6 +27,8 @@ public class InsertionSort extends Sorting {
             while (j >= 0 && array[j] > key) {
                 // Shift elements greater than key to the right
                 // Visualize swapping
+                setColorComparing(j, i); // set in case the first comparison.
+                bs.show();
                 sleep(speed * 20);
                 swap(j+1, j);
                 swapBars(j + 1, j, ColorManager.BAR_CYAN, ColorManager.BAR_RED);
