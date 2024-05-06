@@ -5,8 +5,8 @@ import java.awt.Color;
 import java.awt.Graphics;
 import screen.sortingApp.color.*;
 import screen.sortingApp.bar.Bar;
-import sorting.*;
-import java.util.Arrays;
+import sorting.InsertionSort;
+import sorting.Sorting;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
@@ -20,7 +20,7 @@ public class Visualizer {
     // Max and Min height of bars
     private static final int MAX_BAR_HEIGHT = 350, MIN_BAR_HEIGHT = 30;
     // Array of integers store the values
-    private Integer[] array;
+    private int[] array;
     // The number of elements that user want to sort
     private int capacity;
     // Array of bars that will display on canvas
@@ -49,7 +49,7 @@ public class Visualizer {
 	}
 	
 	public void createManualArray(int canvasWidth, int canvasHeight) {
-	    array = new Integer[capacity];
+	    array = new int[capacity];
 	    bars = new Bar[capacity];
 	    existedArray = true;
         if(comp != 0){
@@ -85,7 +85,7 @@ public class Visualizer {
 	}
 	
 	public void createRandomArray(int canvasWidth, int canvasHeight) {
-        array = new Integer[capacity];
+        array = new int[capacity];
         bars = new Bar[capacity];
         existedArray = true;
         if(comp != 0){
@@ -248,78 +248,14 @@ public class Visualizer {
     	bs.show();
     }
     public void visualizeInsertionSort() {
-        g = bs.getDrawGraphics();
-        // Set up variables for statistics
-        comp = 0;
-        swapping = 0;
-        startTime = System.nanoTime();
-
-        for (int i = 1; i < array.length; i++) {
-            int key = array[i];
-            int j = i - 1;
-
-            // Visualize the comparison
-            bars[i].setColor(ColorManager.BAR_RED);
-            bars[i].draw(g);
-            bs.show();
-            sleep(speed*10);
-            comp++;
-
-            while (j >= 0 && array[j] > key) {
-                // Shift elements greater than key to the right
-                // Visualize swapping
-                swap(j+1, j);
-                swapBarInsertionSort(j + 1, j);
-                swapping++;
-                j--;
-
-                if (j >= 0) {
-                    setColorComparingForInsertionSort(j, i);
-                    bs.show();
-                    comp++;
-                    sleep(speed * 20);
-                    if(array[j] <= key) bars[j].clear(g);
-                }
-            }
-            for(int k = 0; k < i; k ++) {
-            	bars[k].clear(g);
-            	bars[k].setColor(ColorManager.BAR_CYAN); //change cyanColor at here !!
-            	bars[k].draw(g);
-            }
-            bs.show();
-            //shifting to the right for next key.
-            array[j + 1] = key;
-            sleep(speed);
-        }
-        
-        setAllGreen(array.length);
-        time = System.nanoTime() - startTime;
-        // Call function to display statistics
-        listener.onArraySorted(time, comp, swapping);
+    	InsertionSort insertionSort = new InsertionSort(array, bars, g, speed, bs);
+    	startTime = System.nanoTime();
+    	insertionSort.visualize();
+    	comp = insertionSort.getComp();
+    	swapping = insertionSort.getSwap();
+    	time = System.nanoTime() - startTime;
+    	listener.onArraySorted(time, comp, swapping);
         g.dispose();
-    }
-
-    public void setColorComparingForInsertionSort(int j, int i) {
-        bars[j].clear(g);
-        bars[j].setColor(ColorManager.BAR_YELLOW);
-        bars[j].draw(g);
-        sleep(speed);
-        bs.show();
-    }
-
-
-    public void swapBarInsertionSort(int i, int j) { 
-        bars[i].clear(g);
-        bars[j].clear(g);
-        bars[i].setValue(array[i]);
-        bars[j].setValue(array[j]);
-        bars[i].setColor(ColorManager.BAR_CYAN); //Change cyanColor at here
-        bars[j].setColor(ColorManager.BAR_RED);
-        bars[i].draw(g);
-        bars[j].draw(g);
-        bs.show();
-        if (i < array.length - 1) sleep(speed);
-        
     }
     
     public void swapBar(int i, int j) {
@@ -559,7 +495,7 @@ public class Visualizer {
         }
 
         bs.show();
-        sleep(speed * 10);
+        sleep(speed * 20);
 
         // Restore the color of bars
         for (int i = low; i <= high; i++) {
@@ -575,7 +511,7 @@ public class Visualizer {
         bars[index].setValue(value);
         bars[index].draw(g);
         bs.show();
-        sleep(speed * 10);
+        sleep(speed * 20);
         bars[index].clear(g);
         bars[index].setValue(array[index]);
         bars[index].setColor(ColorManager.BAR_WHITE);
