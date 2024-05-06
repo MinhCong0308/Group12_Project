@@ -155,6 +155,7 @@ public class Visualizer {
         swapping = 0;
         startTime = System.nanoTime();
         for (int i = 0; i < array.length - 1; i++) {
+            boolean hasSwap = false;
             for (int j = 0; j < array.length - i - 1; j++) {
                 // Set color for 2 bars that are being compared
                 comp++;
@@ -165,6 +166,7 @@ public class Visualizer {
                     swapping++;
                     swap(j, j + 1);
                     swapBarBubbleSort(j, j + 1, i);
+                    hasSwap = true;
                 } else {
                     // Set the bar back to normal color if not swapping
                     setColorNormal(j, j + 1);
@@ -176,6 +178,15 @@ public class Visualizer {
             bars[bars.length - i - 1].draw(g);
             bs.show();
             sleep(speed);
+            if (!hasSwap){
+                for (int j = 0; j < array.length - 1; j++){
+                    bars[j].clear(g);
+                    bars[j].setColor(ColorManager.BAR_GREEN);
+                    bars[j].draw(g);
+                }
+                bs.show();
+                return;
+            }
         }
         // Set the first bar to green
         bars[0].clear(g);
@@ -480,14 +491,14 @@ public class Visualizer {
         int leftLength = mid - low + 1;
         int rightLength = high - mid;
 
-        // The left part in light blue
+        // The left part
         for (int i = low; i <= mid; i++) {
             bars[i].clear(g);
             bars[i].setColor(ColorManager.BAR_CYAN); // Change Color here
             bars[i].draw(g);
         }
 
-        // The right part in dark blue
+        // The right part
         for (int i = mid + 1; i <= high; i++) {
             bars[i].clear(g);
             bars[i].setColor(ColorManager.BAR_BLUE); // Change color here
@@ -509,6 +520,7 @@ public class Visualizer {
         g.setColor(ColorManager.BAR_YELLOW);
         bars[index].clear(g);
         bars[index].setValue(value);
+        bars[index].setColor(ColorManager.BAR_RED);
         bars[index].draw(g);
         bs.show();
         sleep(speed * 20);
