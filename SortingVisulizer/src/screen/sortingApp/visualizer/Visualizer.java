@@ -9,6 +9,7 @@ import sorting.InsertionSort;
 import sorting.Sorting;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
+import sorting.SelectionSort;
 
 //RED_BAR: represent for the pivot(marked point using for selection and insertion)
 //CYON_BAR: represent for local sorted array.
@@ -201,53 +202,14 @@ public class Visualizer {
     }
     
     public void visualizeSelectionSort() {
-    	g = bs.getDrawGraphics();
-    	//set up variables for statistics
-        comp = 0;
-        swapping = 0;
-        startTime = System.nanoTime();
-    	for (int i = 0; i < array.length - 1; i++) {
-            int minIndex = i;
-            if (minIndex > 0) setAllGreen(minIndex);
-            for (int j = i + 1; j < array.length; j++) {
-            	bars[i].setColor(ColorManager.BAR_RED);
-            	bars[i].draw(g);
-                bs.show();
-                comp++;
-            	setColorComparingForSelectionSort(minIndex, j, i);
-            	sleep(speed * 5);
-            	//bars[minIndex].clear(g);
-            	bars[j].clear(g);
-            	//bars[minIndex].setColor(ColorManager.BAR_CYAN);
-            	//bars[minIndex].draw(g);
-            	bars[j].setColor(ColorManager.BAR_WHITE);
-            	bars[j].draw(g);
-            	bs.show();
-            	sleep(speed * 4);
-                if (array[j] < array[minIndex]) {
-                	if (minIndex != i) {
-	                	bars[minIndex].clear(g);
-	                	bars[minIndex].setColor(ColorManager.BAR_WHITE);
-	                	bars[minIndex].draw(g);
-                	}
-                	bs.show();
-                    minIndex = j;
-                }
-            }
-            sleep(speed);
-            swap(minIndex, i);
-            swapBar(minIndex, i);
-            swapping++;
-            bars[minIndex].clear(g);
-            bars[minIndex].setColor(ColorManager.BAR_WHITE);
-            bars[minIndex].draw(g);
-            bs.show();
-        }
-        setAllGreen(array.length);
-        time = System.nanoTime() - startTime;
-        // Call function to display statistics
-        listener.onArraySorted(time, comp, swapping);
-    	g.dispose();
+    	SelectionSort selectionSort = new SelectionSort(array, bars, g, speed, bs);
+    	startTime = System.currentTimeMillis();
+    	selectionSort.visualize();
+    	comp = selectionSort.getComp();
+    	swapping = selectionSort.getSwap();
+    	time = System.currentTimeMillis() - startTime;
+    	listener.onArraySorted(time, comp, swapping);
+        g.dispose();
     }
     
     public void setAllGreen(int i) {

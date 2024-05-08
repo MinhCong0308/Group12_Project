@@ -1,0 +1,11 @@
+import java.awt.*;
+import java.awt.image.BufferStrategy;
+import screen.sortingApp.color.ColorManager;
+import screen.sortingApp.bar.Bar;
+
+public class SelectionSort extends Sorting {
+	public SelectionSort(int[] array, Bar[] bars, Graphics g, int speed, BufferStrategy bs) {
+        super(array, bars, g, speed, bs);
+    }
+	
+}
