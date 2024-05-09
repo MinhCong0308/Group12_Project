@@ -5,6 +5,7 @@ import java.awt.Color;
 import java.awt.Graphics;
 import screen.sortingApp.color.*;
 import screen.sortingApp.bar.Bar;
+import sorting.BubbleSort;
 import sorting.InsertionSort;
 import sorting.Sorting;
 import java.util.Random;
@@ -49,7 +50,7 @@ public class Visualizer {
         bs = listener.getBufferStrategy();
         existedArray = false;
 	}
-	
+	// Create array
 	public void createManualArray(int canvasWidth, int canvasHeight) {
 	    array = new int[capacity];
 	    bars = new Bar[capacity];
@@ -86,6 +87,7 @@ public class Visualizer {
 	    g.dispose();
 	}
 	
+    // 1. Create random array
 	public void createRandomArray(int canvasWidth, int canvasHeight) {
         array = new int[capacity];
         bars = new Bar[capacity];
@@ -125,84 +127,22 @@ public class Visualizer {
         g.dispose();
     }
 
-
-
-    // for restore purpose
-    public void drawArray()
-    {
-        if (!existedArray)
-            return;
-
-        g = bs.getDrawGraphics();
-
-        for (int i = 0; i < bars.length; i++)
-        {
-            bars[i].draw(g);
-        }
-
-        bs.show();
-        g.dispose();
-    }
-
-    public void setCapacity(int capacity)
-    {
-        this.capacity = capacity;
-    }
-
+    // 2. Bubble sort visualization
     public void visualizeBubbleSort() {
-        // Get graphics from buffer
-        g = bs.getDrawGraphics();
-        //set up variables for statistics
-        comp = 0;
-        swapping = 0;
-        startTime = System.nanoTime();
-        for (int i = 0; i < array.length - 1; i++) {
-            boolean hasSwap = false;
-            for (int j = 0; j < array.length - i - 1; j++) {
-                // Set color for 2 bars that are being compared
-                comp++;
-                setColorComparing(j, j + 1);
-                sleep(speed*20);
-                if (array[j] > array[j + 1]) {
-                    // swap arr[j+1] and arr[j]
-                    swapping++;
-                    swap(j, j + 1);
-                    swapBarBubbleSort(j, j + 1, i);
-                    hasSwap = true;
-                } else {
-                    // Set the bar back to normal color if not swapping
-                    setColorNormal(j, j + 1);
-                }
-            }
-            // Set the bar with the correct position green
-            bars[bars.length - i - 1].clear(g);
-            bars[bars.length - i - 1].setColor(ColorManager.BAR_GREEN);
-            bars[bars.length - i - 1].draw(g);
-            bs.show();
-            sleep(speed);
-            if (!hasSwap){
-                for (int j = 0; j < array.length - 1; j++){
-                    bars[j].clear(g);
-                    bars[j].setColor(ColorManager.BAR_GREEN);
-                    bars[j].draw(g);
-                }
-                bs.show();
-                return;
-            }
-        }
-        // Set the first bar to green
-        bars[0].clear(g);
-        bars[0].setColor(ColorManager.BAR_GREEN);
-        bars[0].draw(g);
-        bs.show();
-        // Compute time taken
-        time = System.nanoTime() - startTime;
-        // Call function to display statistics
+        resetPara();
+        BubbleSort bubbleSort = new BubbleSort(array, bars, g, speed, bs);
+        startTime = System.currentTimeMillis();
+        bubbleSort.visualize();
+        comp = bubbleSort.getComp();
+        swapping = bubbleSort.getSwap();
+        time = System.currentTimeMillis() - startTime;
         listener.onArraySorted(time, comp, swapping);
         g.dispose();
     }
     
+    // 3. Selection sort visualization
     public void visualizeSelectionSort() {
+        resetPara();
     	SelectionSort selectionSort = new SelectionSort(array, bars, g, speed, bs);
     	startTime = System.currentTimeMillis();
     	selectionSort.visualize();
@@ -213,6 +153,8 @@ public class Visualizer {
         g.dispose();
     }
     
+
+
     public void setAllGreen(int i) {
     	for (int j = 0; j < i; j++) {
     		bars[j].clear(g);
@@ -245,11 +187,7 @@ public class Visualizer {
     	if (i < array.length - 1) sleep(speed);
     }
 
-	public interface SortedListener
-    {
-        void onArraySorted(long elapsedTime, int comparison, int swapping);
-        BufferStrategy getBufferStrategy();
-    }
+	
 
     public void swap(int i, int j) {
         int temp = array[i];
@@ -257,31 +195,6 @@ public class Visualizer {
         array[j] = temp;
     }
     
-    public void swapBarBubbleSort(int i, int j, int pivot) {
-        // Change color of 2 swapping bar to red
-        bars[i].clear(g);
-        bars[j].clear(g);
-        bars[i].setColor(ColorManager.BAR_RED);
-        bars[j].setColor(ColorManager.BAR_RED);
-        bars[i].draw(g);
-        bars[j].draw(g);
-        bs.show();
-        sleep(speed*5);
-        // Change color of the corrected bar to green, others to normal
-        bars[i].clear(g);
-        bars[j].clear(g);
-        bars[i].setValue(array[i]);
-        bars[j].setValue(array[j]);
-        bars[i].setColor(ColorManager.BAR_WHITE);
-        if (j == bars.length - pivot - 1) {
-            bars[j].setColor(ColorManager.BAR_GREEN);
-        } else {
-            bars[j].setColor(ColorManager.BAR_WHITE);
-        }
-        bars[i].draw(g);
-        bars[j].draw(g);
-        bs.show();
-    }    
 
     public void setColorComparing(int minIndex, int j) {
         bars[j].clear(g);
@@ -393,7 +306,6 @@ public class Visualizer {
     	listener.onArraySorted(time, comp, swapping);
         g.dispose();
     }
-    
     public void setColorNormal(int i, int j) {
         bars[i].clear(g);
         bars[j].clear(g);
@@ -410,5 +322,35 @@ public class Visualizer {
         } catch (Exception ex) {
                 // Handle exception
         }
+    }
+
+
+    public void setCapacity(int capacity)
+    {
+        this.capacity = capacity;
+    }
+    // for restore purpose
+    public void drawArray()
+    {
+        if (!existedArray)
+            return;
+
+        g = bs.getDrawGraphics();
+
+        for (int i = 0; i < bars.length; i++)
+        {
+            bars[i].draw(g);
+        }
+
+        bs.show();
+        g.dispose();
+    }
+    public void resetPara(){
+        listener.onArraySorted(0, 0, 0);
+    }
+    public interface SortedListener
+    {
+        void onArraySorted(long elapsedTime, int comparison, int swapping);
+        BufferStrategy getBufferStrategy();
     }
 }
