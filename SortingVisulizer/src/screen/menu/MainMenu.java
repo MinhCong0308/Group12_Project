@@ -79,8 +79,8 @@ public class MainMenu extends JFrame {
             }
         });
         // Calculate positions for buttons to be placed at the bottom center of the screen
-        int buttonWidth = 150;
-        int buttonHeight = 40;
+        int buttonWidth = 300;
+        int buttonHeight = 70;
         int xButton1 = (WIDTH - 2 * buttonWidth - 20) / 2;
         int xButton2 = xButton1 + buttonWidth + 20;
         int yButton = HEIGHT - 100;
@@ -101,7 +101,7 @@ public class MainMenu extends JFrame {
 
         // Scale the images
         Image scaledImage1 = originalIcon1.getImage().getScaledInstance(scaledWidth, scaledHeight, Image.SCALE_SMOOTH);
-        Image scaledImage2 = originalIcon2.getImage().getScaledInstance(scaledWidth, scaledHeight, Image.SCALE_SMOOTH);
+        Image scaledImage2 = originalIcon2.getImage().getScaledInstance(scaledWidth, scaledHeight + 100, Image.SCALE_SMOOTH);
 
         // Create scaled image icons
         ImageIcon scaledIcon1 = new ImageIcon(scaledImage1);
@@ -118,7 +118,7 @@ public class MainMenu extends JFrame {
 
         // Set bounds for image labels
         imageLabel1.setBounds(xImage1, yImage, scaledWidth, scaledHeight);
-        imageLabel2.setBounds(xImage2, yImage, scaledWidth, scaledHeight);
+        imageLabel2.setBounds(xImage2, yImage - 50, scaledWidth, scaledHeight + 100);
 
         // Add image labels to the main panel
         mainPanel.add(imageLabel1);

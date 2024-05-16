@@ -1,9 +1,6 @@
 package screen.menu;
 
-import java.awt.Color;
-import java.awt.Graphics;
 import java.awt.*;
-import java.awt.RenderingHints;
 
 import javax.swing.JButton;
 
@@ -17,6 +14,7 @@ class CustomButton extends JButton
         this.color1 = color1;
         this.color2 = color2;
         setOpaque(false);
+        setFont(new Font("Arial", Font.BOLD, 20)); // Set the font size to 20
     }
     @Override
     public void paintComponent(Graphics g)
