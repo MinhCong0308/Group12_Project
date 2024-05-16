@@ -1,62 +1,64 @@
 
 package screen.menu;
+import javax.print.DocFlavor.URL;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
+
 import screen.sortingApp.color.ColorManager;
 import screen.sortingApp.*;
 
 public class MainMenu extends JFrame {
-    private JPanel mainPanel, container;
-    private JLabel titleLabel, groupLabel; // Added groupLabel
-    private JButton quitButton, sortButton;
-    private static final int WIDTH = 1024, HEIGHT = 768;
+    public static final long serialVersionUID = 10L;
+    private static final int WIDTH = 1280, HEIGHT = 720;
+    private JPanel mainPanel;
 
-    public MainMenu() {
+    public MainMenu(){
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(new Dimension(WIDTH, HEIGHT));
+        setMaximumSize(new Dimension(WIDTH, HEIGHT + 200));
+        setMinimumSize(new Dimension(WIDTH, HEIGHT + 20));
+        setPreferredSize(new Dimension(WIDTH, HEIGHT + 20));
         setLocationRelativeTo(null);
-        setTitle("Group 12's sorting visualizer");
-        setBackground(ColorManager.MENU_BACKGROUND);
+        setResizable(false);
+        setBackground(ColorManager.BACKGROUND);
+        setTitle("Group 12's project");
+
         initialize();
-        setVisible(true);
     }
 
-    private void initialize() {
-        int topPadding = 10;
-        int leftPadding = 0;
-        int rightPadding = 0;
-        int bottomPadding = 10;
+    private void initialize(){
+        mainPanel = new GradientPanel();
+        mainPanel.setLayout(null);
+        add(mainPanel);
+    
+        // Welcome label
+        JLabel welcomeLabel = new JLabel("Welcome to Group 12's project!");
+        welcomeLabel.setFont(new Font("Arial", Font.BOLD, 36));  // Increased and bold font size
+        welcomeLabel.setForeground(ColorManager.BAR_WHITE);  
+        welcomeLabel.setHorizontalAlignment(SwingConstants.CENTER);
 
-        Container container = getContentPane();
-        container.setLayout(new BorderLayout());
-        container.setBackground(ColorManager.MENU_BACKGROUND);
+        // Calculate position to center the welcome label horizontally and position it at the top
+        int welcomeLabelWidth = 800; // Adjust the width as needed
+        int welcomeLabelHeight = 60; // Adjust the height as needed
+        int xWelcome = (WIDTH - welcomeLabelWidth) / 2;
+        int yWelcome = 20; // Position the label at the top with a slight margin
 
-        titleLabel = new JLabel("Sorting Visualizer Application");
-        titleLabel.setHorizontalAlignment(SwingConstants.CENTER);
-        titleLabel.setFont(titleLabel.getFont().deriveFont(Font.BOLD, 50f));
-        titleLabel.setForeground(ColorManager.RED_TEXT);
-        titleLabel.setBorder(new EmptyBorder(topPadding, leftPadding, bottomPadding, rightPadding));
+        welcomeLabel.setBounds(xWelcome, yWelcome, welcomeLabelWidth, welcomeLabelHeight);
+        mainPanel.add(welcomeLabel);
 
-        // Adding groupLabel
-        groupLabel = new JLabel("<html>Made by Group 12<br/>Members:<br/>Bui Nguyen Minh<br/>Nguyen Cong Minh<br/>Pham Duy Hoang<br/>Le Van Hau</html>");
-        groupLabel.setHorizontalAlignment(SwingConstants.CENTER);
-        groupLabel.setFont(new Font("Arial", Font.BOLD, 20));
-        groupLabel.setForeground(ColorManager.RED_TEXT);
-        groupLabel.setBackground(ColorManager.MENU_BACKGROUND);
-
-        sortButton = new JButton("Sorting");
-        sortButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-            	new MainFrame().setVisible(true);
-                dispose();
-            }
-        });
-
-        quitButton = new JButton("Quit");
-        quitButton.addActionListener(new ActionListener() {
+        // Buttons
+    CustomButton button1 = new CustomButton("Lets go", Color.RED, Color.BLUE);
+    CustomButton button2 = new CustomButton("Exit", Color.GREEN, Color.YELLOW);
+    button1.addActionListener(new ActionListener() {
+        public void actionPerformed(ActionEvent e) {
+            new MainFrame().setVisible(true);
+            dispose();
+        }
+    });
+        button2.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 int input = JOptionPane.showConfirmDialog(null, "Do you want to quit our application?", "Quit", 2);
                 if (input == 0) {
@@ -64,36 +66,50 @@ public class MainMenu extends JFrame {
                 }
             }
         });
+        // Calculate positions for buttons to be placed at the bottom center of the screen
+    int buttonWidth = 150;
+    int buttonHeight = 40;
+    int xButton1 = (WIDTH - 2 * buttonWidth - 20) / 2;
+    int xButton2 = xButton1 + buttonWidth + 20;
+    int yButton = HEIGHT - 100;
 
-        final int widthButton = 150;
-        final int heightButton = 70;
-        Font buttonFont = new Font("Arial", Font.PLAIN, 30);
-        sortButton.setFont(buttonFont);
-        Dimension buttonSize = new Dimension(widthButton, heightButton);
-        quitButton.setFont(buttonFont);
-        sortButton.setPreferredSize(buttonSize);
-        quitButton.setPreferredSize(buttonSize);
+    button1.setBounds(xButton1, yButton, buttonWidth, buttonHeight);
+    button2.setBounds(xButton2, yButton, buttonWidth, buttonHeight);
 
-        container.add(titleLabel, BorderLayout.NORTH);
-        container.add(groupLabel, BorderLayout.CENTER); // Added groupLabel to the center
-        JPanel buttonPanel = new JPanel(new GridBagLayout());
-        GridBagConstraints gbc = new GridBagConstraints();
-        gbc.gridx = 0;
-        gbc.gridy = 0;
-        gbc.insets = new Insets(10, 0, 10, 0);
+    mainPanel.add(button1);
+    mainPanel.add(button2);
 
-        // Add sortButton to the left bottom
-        gbc.anchor = GridBagConstraints.WEST; // Align to the left
-        buttonPanel.add(sortButton, gbc);
+    // Load the original images
+    ImageIcon originalIcon1 = new ImageIcon("./SortingVisulizer/src/screen/menu/image/java.png");
+    ImageIcon originalIcon2 = new ImageIcon("./SortingVisulizer/src/screen/menu/image/hust.png");
 
-        // Add quitButton to the right bottom
-        gbc.anchor = GridBagConstraints.EAST; // Align to the right
-        gbc.gridx = 1; // Change the column to place the quitButton
-        buttonPanel.add(quitButton, gbc);
+    // Calculate the scaled dimensions
+    int scaledWidth = 250; // Adjust as needed
+    int scaledHeight = 250; // Adjust as needed
 
-        buttonPanel.setBackground(ColorManager.MENU_BACKGROUND);
+    // Scale the images
+    Image scaledImage1 = originalIcon1.getImage().getScaledInstance(scaledWidth, scaledHeight, Image.SCALE_SMOOTH);
+    Image scaledImage2 = originalIcon2.getImage().getScaledInstance(scaledWidth, scaledHeight, Image.SCALE_SMOOTH);
 
-        container.add(buttonPanel, BorderLayout.SOUTH);
+    // Create scaled image icons
+    ImageIcon scaledIcon1 = new ImageIcon(scaledImage1);
+    ImageIcon scaledIcon2 = new ImageIcon(scaledImage2);
 
+    // Create JLabels with scaled images
+    JLabel imageLabel1 = new JLabel(scaledIcon1);
+    JLabel imageLabel2 = new JLabel(scaledIcon2);
+
+    // Calculate positions for images to be placed with a gap between them
+    int xImage1 = (WIDTH - 2 * scaledWidth) / 3; // Adjust the divisor for appropriate spacing
+    int xImage2 = 2 * (WIDTH - scaledWidth) / 3; // Adjust the divisor for appropriate spacing
+    int yImage = (HEIGHT - scaledHeight) / 2;
+
+    // Set bounds for image labels
+    imageLabel1.setBounds(xImage1, yImage, scaledWidth, scaledHeight);
+    imageLabel2.setBounds(xImage2, yImage, scaledWidth, scaledHeight);
+
+    // Add image labels to the main panel
+    mainPanel.add(imageLabel1);
+    mainPanel.add(imageLabel2);
     }
 }
