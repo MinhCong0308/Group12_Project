@@ -195,7 +195,7 @@ public class MainFrame extends JFrame implements PropertyChangeListener,
 				visualizer.visualizeMergeSort();
 				break;
 			case 6:  //
-				new MainMenu();
+				new MainMenu().setVisible(true);;
 				dispose();
 		}
 	}
