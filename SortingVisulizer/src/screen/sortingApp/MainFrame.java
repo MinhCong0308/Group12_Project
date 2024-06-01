@@ -38,6 +38,9 @@ public class MainFrame extends JFrame implements PropertyChangeListener,
 	//private JSlider fpsSlider;
 	private MyCanvas canvas;
 	private Visualizer visualizer;
+	private Thread thread;
+	private boolean sortingInProgress = false;
+	
 
 	public MainFrame() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -175,29 +178,55 @@ public class MainFrame extends JFrame implements PropertyChangeListener,
 
 	// button clicked
 	public void sortButtonClicked(int id) {
-		switch (id) {
-			case 0:
-				visualizer.createManualArray(canvas.getWidth(), canvas.getHeight());
-				break;
-			case 1:  // create button
-				visualizer.createRandomArray(canvas.getWidth(), canvas.getHeight());
-				break;
-			case 2: // 1 sorting algorithm
-				visualizer.visualizeBubbleSort();
-				break;
-			case 3:  // 1 sorting algorithm
-				visualizer.visualizeSelectionSort();
-				break;
-			case 4:  // 1 sorting algorithm
-				visualizer.visualizeInsertionSort();
-				break;
-			case 5: //1 sorting algorithm
-				visualizer.visualizeMergeSort();
-				break;
-			case 6:  //
-				new MainMenu().setVisible(true);;
-				dispose();
-		}
+		thread = new Thread(() -> {
+			switch (id) {
+				case 0:
+				    if (sortingInProgress) return;
+				    else {
+				    	visualizer.createManualArray(canvas.getWidth(), canvas.getHeight());
+				    }
+				    break;
+				case 1:  // create button
+					if (sortingInProgress) return;
+					else {
+						visualizer.createRandomArray(canvas.getWidth(), canvas.getHeight());
+					}
+					break;
+				case 2: // 1 sorting algorithm
+					if (sortingInProgress) return;
+					else {
+						sortingInProgress = true;
+						visualizer.visualizeBubbleSort();
+					}
+					break;
+				case 3:  // 1 sorting algorithm
+					if (sortingInProgress) return;
+					else {
+						sortingInProgress = true;
+						visualizer.visualizeSelectionSort();
+					}
+					break;
+				case 4:  // 1 sorting algorithm
+					if (sortingInProgress) return;
+					else {
+						sortingInProgress = true;
+						visualizer.visualizeInsertionSort();
+					}
+					break;
+				case 5: //1 sorting algorithm
+					if (sortingInProgress) return;
+					else {
+						sortingInProgress = true;
+						visualizer.visualizeMergeSort();
+					}
+					break;
+				case 6:  //
+					new MainMenu().setVisible(true);;
+					dispose();
+				}
+			sortingInProgress = false;
+		});
+		thread.start();
 	}
 
 

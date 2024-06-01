@@ -1,0 +1,85 @@
+package sorting;
+
+import java.awt.*;
+import java.awt.image.BufferStrategy;
+import screen.sortingApp.color.ColorManager;
+import screen.sortingApp.bar.Bar;
+
+public class SelectionSort extends Sorting {
+	public SelectionSort(int[] array, Bar[] bars, Graphics g, int speed, BufferStrategy bs) {
+        super(array, bars, g, speed, bs);
+    }
+
+	@Override
+	public void visualize() {
+		// TODO Auto-generated method stub
+		g = bs.getDrawGraphics();
+        comp = 0;
+        swapping = 0;
+    	for (int i = 0; i < array.length - 1; i++) {
+            int minIndex = i;
+            if (minIndex > 0) setAllGreen(minIndex);
+            for (int j = i + 1; j < array.length; j++) {
+            	bars[i].setColor(ColorManager.BAR_RED);
+            	bars[i].draw(g);
+                bs.show();
+                comp++;
+            	setColorComparingForSelectionSort(minIndex, j, i);
+            	sleep(speed * 5);
+            	bars[j].clear(g);
+            	bars[j].setColor(ColorManager.BAR_WHITE);
+            	bars[j].draw(g);
+            	bs.show();
+            	sleep(speed);
+                if (array[j] < array[minIndex]) {
+                	if (minIndex != i) {
+	                	bars[minIndex].clear(g);
+	                	bars[minIndex].setColor(ColorManager.BAR_WHITE);
+	                	bars[minIndex].draw(g);
+                	}
+                	bs.show();
+                    minIndex = j;
+                }
+            }
+            sleep(speed);
+            swap(minIndex, i);
+            swapBar(minIndex, i);
+            swapping++;
+            bars[minIndex].clear(g);
+            bars[minIndex].setColor(ColorManager.BAR_WHITE);
+            bars[minIndex].draw(g);
+            bs.show();
+        }
+        setAllGreen(array.length);
+    	g.dispose();
+	}
+	
+	
+	public void setColorComparingForSelectionSort(int minIndex, int j, int i) {
+        bars[j].clear(g);
+        if (minIndex != i) {
+	        bars[minIndex].clear(g);
+	        bars[minIndex].setColor(ColorManager.BAR_YELLOW);
+	        bars[minIndex].draw(g);
+        }
+        bars[j].setColor(ColorManager.BAR_YELLOW);
+        
+        bars[j].draw(g);
+        sleep(speed);
+        bs.show();
+    }
+	
+	public void swapBar(int i, int j) {
+    	bars[i].clear(g);
+    	bars[j].clear(g);
+    	bars[i].setValue(array[i]);
+    	bars[j].setValue(array[j]);
+    	bars[i].setColor(ColorManager.BAR_BLUE);
+    	bars[j].setColor(ColorManager.BAR_ORANGE);
+    	bars[i].draw(g);
+    	bars[j].draw(g);
+    	bs.show();
+    	if (i < array.length - 1) sleep(speed);
+    }
+	
+}

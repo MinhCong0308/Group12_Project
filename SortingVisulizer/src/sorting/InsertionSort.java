@@ -22,13 +22,13 @@ public class InsertionSort extends Sorting {
             bars[i].draw(g);
             
             bs.show();
-            sleep(speed * 20);
+            sleep(speed);
             comp++;
 
             while (j >= 0 && array[j] > key) {
                 // Shift elements greater than key to the right
                 // Visualize swapping
-                sleep(speed * 20);
+                sleep(speed);
                 swap(j+1, j);
                 swapBars(j + 1, j, ColorManager.BAR_CYAN, ColorManager.BAR_RED);
                 swapping++;
@@ -38,7 +38,7 @@ public class InsertionSort extends Sorting {
                 	setColorComparing(j, i);
                 	bs.show();
                     comp++;
-                    sleep(speed * 20);
+                    sleep(speed);
                     if(array[j] <= key) bars[j].clear(g);
                 }
             }
@@ -50,7 +50,7 @@ public class InsertionSort extends Sorting {
             bs.show();
             //shifting to the right for next key.
             array[j + 1] = key;
-            sleep(speed * 20);
+            sleep(speed);
         }
         setAllGreen(array.length);
     }
@@ -59,7 +59,7 @@ public class InsertionSort extends Sorting {
         bars[j].clear(g);
         bars[j].setColor(ColorManager.BAR_YELLOW);
         bars[j].draw(g);
-        sleep(speed * 10);
+        sleep(speed);
         bs.show();
     } 
 }

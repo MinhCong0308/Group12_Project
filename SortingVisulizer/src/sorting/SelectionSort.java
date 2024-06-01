@@ -25,12 +25,12 @@ public class SelectionSort extends Sorting {
                 bs.show();
                 comp++;
             	setColorComparingForSelectionSort(minIndex, j, i);
-            	sleep(speed * 5);
+            	sleep(speed);
             	bars[j].clear(g);
             	bars[j].setColor(ColorManager.BAR_WHITE);
             	bars[j].draw(g);
             	bs.show();
-            	sleep(speed * 4);
+            	sleep(speed);
                 if (array[j] < array[minIndex]) {
                 	if (minIndex != i) {
 	                	bars[minIndex].clear(g);
