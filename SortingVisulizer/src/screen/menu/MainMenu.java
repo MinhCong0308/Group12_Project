@@ -50,7 +50,7 @@ public class MainMenu extends JFrame {
         mainPanel.add(welcomeLabel);
 
 
-        JLabel name = new JLabel("Sorting Visualize");
+        JLabel name = new JLabel("Sorting Visualization");
         name.setFont(new Font("Arial", Font.BOLD, 40));
         name.setForeground(ColorManager.BAR_WHITE);
         name.setHorizontalAlignment(SwingConstants.CENTER);
