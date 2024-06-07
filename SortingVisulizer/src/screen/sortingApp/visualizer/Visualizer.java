@@ -7,7 +7,6 @@ import screen.sortingApp.color.*;
 import screen.sortingApp.bar.Bar;
 import sorting.BubbleSort;
 import sorting.InsertionSort;
-import sorting.Sorting;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
 import sorting.SelectionSort;
@@ -95,37 +94,82 @@ public class Visualizer {
         if(comp != 0){
              listener.onArraySorted(0,0,0);
         }
-        // initial position
-        double x = PADDING;
-        int y = canvasHeight- PADDING;
-
-        // width of all bars
-        double width = (double) (canvasWidth - PADDING*2) / capacity;
-
-        // get graphics
-        g = bs.getDrawGraphics();
-        g.setColor(ColorManager.SORTAPP_BACKGROUND);
-        g.fillRect(0, 0, canvasWidth, canvasHeight);
-
         Random rand = new Random();
-        int value;
-        Bar bar;
-        for (int i = 0; i < array.length; i++)
-        {
-            value = rand.nextInt(MAX_BAR_HEIGHT) + MIN_BAR_HEIGHT;
-            array[i] = value;
-
-            bar = new Bar((int)x, y, (int) width, value, originalColor);
-            bar.draw(g);
-            bars[i] = bar;
-
-            // move to the next bar
-            x += width;
+        for (int i = 0; i < array.length; i++) {
+            array[i] = MIN_BAR_HEIGHT + rand.nextInt(MAX_BAR_HEIGHT - MIN_BAR_HEIGHT + 1);
         }
-
-        bs.show();
-        g.dispose();
+        drawBars(canvasWidth, canvasHeight);
     }
+	public void createNearlySortedArray(int canvasWidth, int canvasHeight) {
+	    array = new int[capacity];
+	    bars = new Bar[capacity];
+	    existedArray = true;
+	    if(comp != 0){
+	        listener.onArraySorted(0, 0, 0);
+	    }
+	    for (int i = 0; i < array.length; i++) {
+	        array[i] = MIN_BAR_HEIGHT + (i * (MAX_BAR_HEIGHT - MIN_BAR_HEIGHT) / capacity);
+	    }
+
+	    Random rand = new Random();
+	    for (int i = 0; i < array.length / 10; i++) {
+	        int index1 = rand.nextInt(array.length);
+	        int index2 = rand.nextInt(array.length);
+	        int temp = array[index1];
+	        array[index1] = array[index2];
+	        array[index2] = temp;
+	    }
+	    drawBars(canvasWidth, canvasHeight);
+
+	}
+
+	public void createReverseSortedArray(int canvasWidth, int canvasHeight) {
+	    array = new int[capacity];
+	    bars = new Bar[capacity];
+	    existedArray = true;
+	    if(comp != 0){
+	        listener.onArraySorted(0, 0, 0);
+	    }
+	    for (int i = 0; i < array.length; i++) {
+	        array[i] = MAX_BAR_HEIGHT - (i * (MAX_BAR_HEIGHT - MIN_BAR_HEIGHT) / capacity);
+	    }
+	    drawBars(canvasWidth, canvasHeight);
+
+	}
+
+	public void createFewUniqueArray(int canvasWidth, int canvasHeight) {
+	    array = new int[capacity];
+	    bars = new Bar[capacity];
+	    existedArray = true;
+	    if(comp != 0){
+	        listener.onArraySorted(0, 0, 0);
+	    }
+	    Random rand = new Random();
+	    int uniqueValues = rand.nextInt(5) + 1;
+	    for (int i = 0; i < array.length; i++) {
+	        array[i] = MIN_BAR_HEIGHT + rand.nextInt(uniqueValues) * (MAX_BAR_HEIGHT - MIN_BAR_HEIGHT) / 5;
+	    }
+	    drawBars(canvasWidth, canvasHeight);
+	}
+	public void drawBars(int canvasWidth, int canvasHeight) {
+        // initial position
+	    double x = PADDING;
+	    int y = canvasHeight - PADDING;
+	    double width = (double) (canvasWidth - PADDING * 2) / capacity;
+
+	    g = bs.getDrawGraphics();
+	    g.setColor(ColorManager.SORTAPP_BACKGROUND);
+	    g.fillRect(0, 0, canvasWidth, canvasHeight);
+	    for (int i = 0; i < array.length; i++) {
+	        Bar bar = new Bar((int) x, y, (int) width, array[i], originalColor);
+	        bar.draw(g);
+	        bars[i] = bar;
+	        x += width;
+	    }
+
+	    bs.show();
+	    g.dispose();
+	}
 
     // 2. Bubble sort visualization
     public void visualizeBubbleSort() {
