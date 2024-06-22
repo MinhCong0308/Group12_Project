@@ -28,6 +28,8 @@ public class ChatBox extends JFrame {
         // Chat area
         chatArea = new JTextArea();
         chatArea.setEditable(false);
+        chatArea.setLineWrap(true);  // Enable line wrap
+        chatArea.setWrapStyleWord(true);  // Wrap at word boundaries
         JScrollPane scrollPane = new JScrollPane(chatArea);
         add(scrollPane, BorderLayout.CENTER);
 
