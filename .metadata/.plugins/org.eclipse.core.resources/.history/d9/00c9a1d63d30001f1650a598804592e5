@@ -13,7 +13,7 @@ public class ButtonPanel extends JPanel {
     private JButton[] buttons;
     private SortButtonListener listener;
     private ArrayList<Color> colorButton = new ArrayList<Color>();
-    private int number = 8;
+    private int number = 7;
 
     public ButtonPanel(SortButtonListener listener) {
         super();
@@ -25,11 +25,10 @@ public class ButtonPanel extends JPanel {
         colorButton.add(ColorManager.BUTTON_ORANGE);
         colorButton.add(ColorManager.BUTTON_PINK);
         colorButton.add(ColorManager.BUTTON_YELLOW);
-        colorButton.add(ColorManager.BUTTON_BUBBLE);
         colorButton.add(ColorManager.EXIT_BUTTON);
 
         // Initialize buttons
-        String[] buttonLabels = {"Manually Create", "Random Create", "Bubble Sort", "Selection Sort", "Insertion Sort", "Merge Sort", "ChatBot" ,"Back to Menu"};
+        String[] buttonLabels = {"Manually Create", "Random Create", "Bubble Sort", "Selection Sort", "Insertion Sort", "Merge Sort", "Back to Menu"};
         for (int i = 0; i < buttons.length; i++) {
         	Color color = colorButton.get(i);
             buttons[i] = new JButton(buttonLabels[i]);

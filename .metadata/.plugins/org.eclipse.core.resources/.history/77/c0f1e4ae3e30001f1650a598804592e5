@@ -5,7 +5,6 @@ import screen.sortingApp.color.ColorManager;
 import screen.sortingApp.visualizer.*;
 import screen.sortingApp.button.*;
 import screen.sortingApp.canvas.*;
-import screen.sortingApp.chatbox.ChatBox;
 import screen.sortingApp.formatter.*;
 
 import javax.swing.*;
@@ -27,7 +26,7 @@ public class MainFrame extends JFrame implements PropertyChangeListener,
 	   ChangeListener, Visualizer.SortedListener,
 	   ButtonPanel.SortButtonListener, MyCanvas.VisualizerProvider {
 	public static final long serialVersionUID = 10L;
-	private static final int WIDTH = 1100, HEIGHT = 800;
+	private static final int WIDTH = 1280, HEIGHT = 800;
 	private static final int CAPACITY = 50;
 	private JPanel mainPanel, inputPanel, inforPanel;
 	private ButtonPanel buttonPanel;
@@ -53,11 +52,6 @@ public class MainFrame extends JFrame implements PropertyChangeListener,
 		setTitle("Sorting Visualizer");
 
 		initialize();
-	       // Position the frame on the right side of the screen
-        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-        int x = screenSize.width - this.getWidth();
-        int y = (screenSize.height - this.getHeight()) / 2;
-        setLocation(x, y);
 	}
 
 

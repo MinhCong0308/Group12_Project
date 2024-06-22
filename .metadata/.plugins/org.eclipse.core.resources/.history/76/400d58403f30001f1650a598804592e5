@@ -1,0 +1,108 @@
+package screen.sortingApp.chatbox;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.*;
+import java.net.HttpURLConnection;
+import java.net.URL;
+
+public class ChatBox extends JFrame {
+
+    private JTextArea chatArea;
+    private JTextField inputField;
+    private JButton sendButton;
+
+    private static final String url = "https://api.openai.com/v1/chat/completions";
+    private static final String apiKey = "";
+    private static final String model = "gpt-3.5-turbo";
+
+    public ChatBox() {
+        // Set up the frame
+        setTitle("ChatGPT Swing Chatbox");
+        setSize(600, 400);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setLayout(new BorderLayout());
+
+        // Chat area
+        chatArea = new JTextArea();
+        chatArea.setEditable(false);
+        JScrollPane scrollPane = new JScrollPane(chatArea);
+        add(scrollPane, BorderLayout.CENTER);
+
+        // Input field
+        inputField = new JTextField();
+        add(inputField, BorderLayout.SOUTH);
+
+        // Send button
+        sendButton = new JButton("Send");
+        add(sendButton, BorderLayout.EAST);
+
+        // Action listener for send button
+        sendButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String userInput = inputField.getText();
+                if (!userInput.trim().isEmpty()) {
+                    chatArea.append("User: " + userInput + "\n");
+                    String response = chatGPT(userInput);
+                    chatArea.append("ChatGPT: " + response + "\n");
+                    inputField.setText("");
+                }
+            }
+        });
+
+        // Show the frame
+        setVisible(true);
+    }
+
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                new ChatBox();
+            }
+        });
+    }
+
+    private static String chatGPT(String prompt) {
+        try {
+            URL obj = new URL(url);
+            HttpURLConnection connection = (HttpURLConnection) obj.openConnection();
+            connection.setRequestMethod("POST");
+            connection.setRequestProperty("Authorization", "Bearer " + apiKey);
+            connection.setRequestProperty("Content-Type", "application/json");
+
+            // The request body
+            String body = "{\"model\": \"" + model + "\", \"messages\": [{\"role\": \"user\", \"content\": \"" + prompt + "\"}]}";
+            connection.setDoOutput(true);
+            OutputStreamWriter writer = new OutputStreamWriter(connection.getOutputStream());
+            writer.write(body);
+            writer.flush();
+            writer.close();
+
+            // Response from ChatGPT
+            BufferedReader br = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+            String line;
+            StringBuffer response = new StringBuffer();
+
+            while ((line = br.readLine()) != null) {
+                response.append(line);
+            }
+            br.close();
+
+            // calls the method to extract the message.
+            return extractMessageFromJSONResponse(response.toString());
+
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private static String extractMessageFromJSONResponse(String response) {
+        int start = response.indexOf("content") + 11;
+        int end = response.indexOf("\"", start);
+        return response.substring(start, end);
+    }
+}

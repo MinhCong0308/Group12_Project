@@ -27,7 +27,7 @@ public class MainFrame extends JFrame implements PropertyChangeListener,
 	   ChangeListener, Visualizer.SortedListener,
 	   ButtonPanel.SortButtonListener, MyCanvas.VisualizerProvider {
 	public static final long serialVersionUID = 10L;
-	private static final int WIDTH = 1100, HEIGHT = 800;
+	private static final int WIDTH = 1000, HEIGHT = 800;
 	private static final int CAPACITY = 50;
 	private JPanel mainPanel, inputPanel, inforPanel;
 	private ButtonPanel buttonPanel;
