@@ -46,9 +46,10 @@ public class ChatBox extends JFrame {
                 String userInput = inputField.getText();
                 inputField.setText("");
                 if (!userInput.trim().isEmpty()) {
-                    chatArea.append("User: " + userInput + "\n");
+                    chatArea.append("User: " + userInput + "\n\n");
                     String response = chatGPT(userInput);
-                    chatArea.append("ChatGPT: " + response + "\n");
+                    response = response.replace("\\n\\n", "\n\n").replace("\\n", "\n");
+                    chatArea.append("ChatGPT: " + response + "\n\n");
                     inputField.setText("");
                 }
             }
